@@ -40,12 +40,16 @@
   .card.soon .go { color: var(--muted); font-weight: 400; }
 
   ol.modules { list-style: none; padding: 0; margin: 0; display: grid; gap: 8px; }
-  ol.modules li { background: var(--paper); border: 1px solid var(--line); border-radius: 10px; padding: 12px 16px; display: grid; grid-template-columns: 44px 1fr auto; gap: 12px; align-items: baseline; }
-  ol.modules .n { font-weight: 700; font-size: 20px; }
+  ol.modules li { background: var(--paper); border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; display: grid; grid-template-columns: 44px 1fr auto; gap: 12px; align-items: center; }
+  ol.modules .n { font-weight: 700; font-size: 22px; text-align: center; line-height: 1; }
   ol.modules .t { font-weight: 700; }
   ol.modules .d { color: var(--muted); font-size: 15px; display: block; font-weight: 400; }
-  ol.modules .s { font-size: 14px; color: var(--muted); white-space: nowrap; }
-  ol.modules .s a { font-weight: 700; color: var(--navy); }
+  ol.modules .s { font-size: 14px; color: var(--muted); white-space: nowrap; display: flex; gap: 8px; align-items: center; }
+  .chip { position: relative; display: inline-flex; align-items: center; gap: 6px; padding: 7px 12px; border: 1px solid var(--navy); border-radius: 8px; font-size: 14px; font-weight: 700; color: var(--navy); text-decoration: none; background: #fff; transition: background .15s, color .15s; }
+  .chip svg { width: 16px; height: 16px; flex: none; }
+  .chip:hover, .chip:focus-visible { background: var(--navy); color: #fff; outline: none; }
+  .chip[data-tip]::after { content: attr(data-tip); position: absolute; bottom: calc(100% + 8px); right: 0; width: max-content; max-width: 240px; white-space: normal; text-align: left; background: var(--navy); color: #fff; font-weight: 400; font-size: 13px; line-height: 1.35; padding: 7px 10px; border-radius: 6px; box-shadow: 0 4px 14px rgba(31,42,68,.18); opacity: 0; transform: translateY(4px); pointer-events: none; transition: opacity .15s, transform .15s; z-index: 5; }
+  .chip[data-tip]:hover::after, .chip[data-tip]:focus-visible::after { opacity: 1; transform: translateY(0); }
 
   footer { padding: 40px 0 56px; color: var(--muted); font-size: 14px; }
 
@@ -53,7 +57,8 @@
     h1 { font-size: 32px; }
     .sandbox { grid-template-columns: 1fr; }
     ol.modules li { grid-template-columns: 32px 1fr; }
-    ol.modules .s { grid-column: 2; white-space: normal; }
+    ol.modules .s { grid-column: 2; white-space: normal; flex-wrap: wrap; }
+    .chip[data-tip]::after { display: none; }
   }
 </style>
 </head>
@@ -61,7 +66,7 @@
 
 <header>
   <div class="wrap">
-    <div class="kicker">ADP · Admin Development Program</div>
+    <div class="kicker">project</div>
     <h1>Скрипты для Google Таблиц</h1>
     <p>Курс о том, как находить в своей работе рутину и отдавать её скрипту: от кнопки «оформить» до отчётов, которые сами приходят по понедельникам.</p>
   </div>
@@ -84,11 +89,11 @@
 
   <section id="modules">
     <h2>Модули курса</h2>
-    <p class="sub">Тексты уроков и тесты — на учебной платформе. Здесь — карта курса и ссылки на скрипты.</p>
+    <p class="sub">Тексты модулей и учебные скрипты. Тесты — на учебной платформе.</p>
     <ol class="modules">
-      <li><span class="n">0</span><span class="t">Галерея идей<span class="d">15 автоматизаций «до и после», карта идей по ролям</span></span><span class="s">без кода</span></li>
-      <li><span class="n">1</span><span class="t">Среда Apps Script<span class="d">Редактор, первый запуск, порядок в проекте</span></span><span class="s"><a href="https://github.com/EternaF0rren/apps-script-course/tree/main/scripts/m01">скрипты →</a></span></li>
-      <li><span class="n">2</span><span class="t">Макросы и форматирование<span class="d">Запись макроса, форматирование с условиями, чистка выгрузки</span></span><span class="s"><a href="https://github.com/EternaF0rren/apps-script-course/tree/main/scripts/m02">скрипты →</a></span></li>
+      <li><span class="n">0</span><span class="t">Галерея идей<span class="d">15 автоматизаций «до и после», карта идей по ролям</span></span><span class="s"><a class="chip" href="https://docs.google.com/document/d/1hnFoWCzMp6JFOyHF3kFUVEWM9n6y7GfUU9SesZNvckA/edit" target="_blank" rel="noopener" data-tip="Текст модуля в Google Docs: уроки, примеры, задания" aria-label="Текст модуля в Google Docs"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h6"/></svg>Текст</a></span></li>
+      <li><span class="n">1</span><span class="t">Среда Apps Script<span class="d">Редактор, первый запуск, порядок в проекте</span></span><span class="s"><a class="chip" href="https://docs.google.com/document/d/1rwWz7ZaE8gskplhphKuHR-JriuVYANMydlII-qduWIU/edit" target="_blank" rel="noopener" data-tip="Текст модуля в Google Docs: уроки, примеры, задания" aria-label="Текст модуля в Google Docs"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h6"/></svg>Текст</a><a class="chip" href="https://github.com/EternaF0rren/apps-script-course/tree/main/scripts/m01" target="_blank" rel="noopener" data-tip="Учебные скрипты модуля на GitHub: готовый код, который можно скопировать" aria-label="Учебные скрипты модуля на GitHub"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M8 7l-5 5 5 5M16 7l5 5-5 5"/></svg>Скрипты</a></span></li>
+      <li><span class="n">2</span><span class="t">Макросы и форматирование<span class="d">Запись макроса, форматирование с условиями, чистка выгрузки</span></span><span class="s"><a class="chip" href="https://docs.google.com/document/d/13MtvKTYr9phef3FQ8FtgEdVHn8fVODUpS78gn4h951Q/edit" target="_blank" rel="noopener" data-tip="Текст модуля в Google Docs: уроки, примеры, задания" aria-label="Текст модуля в Google Docs"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h6"/></svg>Текст</a><a class="chip" href="https://github.com/EternaF0rren/apps-script-course/tree/main/scripts/m02" target="_blank" rel="noopener" data-tip="Учебные скрипты модуля на GitHub: готовый код, который можно скопировать" aria-label="Учебные скрипты модуля на GitHub"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M8 7l-5 5 5 5M16 7l5 5-5 5"/></svg>Скрипты</a></span></li>
       <li><span class="n">3</span><span class="t">Как запускать скрипты<span class="d">Своё меню, кнопки, чекбоксы, диалоги</span></span><span class="s">скоро</span></li>
       <li><span class="n">4</span><span class="t">ИИ-соавтор, отладка, безопасность<span class="d">Как просить код у ИИ, проверять и чинить его</span></span><span class="s">скоро</span></li>
       <li><span class="n">5</span><span class="t">Автоматизация рутины<span class="d">Триггеры, архив, файлы по шаблону, уведомления</span></span><span class="s">скоро</span></li>
