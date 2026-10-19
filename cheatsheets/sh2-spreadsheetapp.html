@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ш2. Карта SpreadsheetApp — Скрипты для Google Таблиц</title>
+<link rel="stylesheet" href="../assets/slides.css">
+</head>
+<body>
+<div class="progress"></div>
+<div class="deck">
+  <div class="topbar">
+    <div><span class="badge">Ш2</span>Карта SpreadsheetApp</div>
+    <a href="../index.html">← Все материалы курса</a>
+  </div>
+
+  <main class="stage">
+
+    <section class="slide title">
+      <div class="kicker">Шпаргалка · нужна с модуля 2</div>
+      <h1>Карта SpreadsheetApp</h1>
+      <p class="lead">Как скрипт добирается от таблицы до нужной ячейки, и 20 команд, которых хватит на весь курс.</p>
+      <p class="lead">← → листать · Home — в начало</p>
+    </section>
+
+    <section class="slide">
+      <h2><span class="num">1</span>Матрёшка: от таблицы до ячейки</h2>
+      <div class="cols">
+        <div class="nest">
+          <div class="box"><b>SpreadsheetApp</b><span>вход: всё про Таблицы</span>
+            <div class="box"><b>Spreadsheet</b><span>файл таблицы</span>
+              <div class="box"><b>Sheet</b><span>лист «Заказы»</span>
+                <div class="box hl"><b>Range</b><span>диапазон A2:L201</span>
+                  <div class="box"><b>values</b><span>сами значения</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div>
+<pre class="code">const ss = SpreadsheetApp.getActive();
+const sheet = ss.getSheetByName('Заказы');
+const range = sheet.getRange('A2:L201');
+const values = range.getValues();</pre>
+          <p>Каждый шаг — «открыть следующую матрёшку». Почти любой скрипт для Таблиц начинается с этих строк.</p>
+          <div class="note">Главная матрёшка — <b>Range</b>. Красим, читаем, пишем, форматируем — всегда диапазон.</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <h2><span class="num">2</span>Таблица и листы</h2>
+      <table class="map">
+        <tr><th>Команда</th><th>Что делает</th></tr>
+        <tr><td><code>SpreadsheetApp.getActive()</code></td><td>Таблица, к которой привязан скрипт</td></tr>
+        <tr><td><code>ss.getSheetByName('Заказы')</code></td><td>Лист по имени. Если листа нет — вернёт <code>null</code></td></tr>
+        <tr><td><code>ss.getActiveSheet()</code></td><td>Лист, который сейчас открыт у пользователя</td></tr>
+        <tr><td><code>ss.getSheets()</code></td><td>Список всех листов, чтобы пройти по каждому</td></tr>
+        <tr><td><code>ss.insertSheet('Октябрь')</code></td><td>Создать новый лист</td></tr>
+        <tr><td><code>SpreadsheetApp.openById('ID')</code></td><td>Открыть другую таблицу по ID из её ссылки (модуль 6)</td></tr>
+      </table>
+      <div class="note">ID таблицы — длинный кусок ссылки между <code>/d/</code> и <code>/edit</code>.</div>
+    </section>
+
+    <section class="slide">
+      <h2><span class="num">3</span>Как взять диапазон</h2>
+      <div class="cols">
+<pre class="code">sheet.getRange('A1')          // одна ячейка
+sheet.getRange('A1:L1')       // шапка
+sheet.getRange(2, 5)          // строка 2, колонка 5 (E2)
+
+// строка, колонка, сколько строк, сколько колонок
+sheet.getRange(2, 1, 10, 3)   // A2:C11
+
+sheet.getDataRange()          // всё, где есть данные
+sheet.getLastRow()            // номер последней строки
+sheet.getLastColumn()         // номер последней колонки</pre>
+        <div>
+          <p>Буквенный адрес <code>'A1:L1'</code> удобен, когда диапазон всегда один и тот же.</p>
+          <p>Числовой <code>getRange(строка, колонка, строк, колонок)</code> — когда размер меняется: «от второй строки до последней».</p>
+<pre class="code">// Все данные без шапки
+sheet.getRange(2, 1,
+  sheet.getLastRow() - 1,
+  sheet.getLastColumn());</pre>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <h2><span class="num">4</span>Читать и записывать</h2>
+      <div class="cols">
+<pre class="code">// Одна ячейка
+const status = sheet.getRange('E2').getValue();
+sheet.getRange('E2').setValue('Готов');
+
+// Много ячеек: двумерный массив [строка][колонка]
+const values = sheet.getDataRange().getValues();
+values[0][0]   // A1 — первая строка, первая колонка
+values[1][4]   // E2
+
+// Записать массив обратно (размер должен совпасть)
+sheet.getRange(2, 1, rows.length, 5).setValues(rows);
+
+// Добавить строку в конец
+sheet.appendRow(['ORD-10201', new Date(), 'Новый']);</pre>
+        <div>
+          <p><code>getValue</code> / <code>setValue</code> — для одной ячейки.</p>
+          <p><code>getValues</code> / <code>setValues</code> — для диапазона. В сотни раз быстрее, чем ходить по ячейкам по одной.</p>
+          <div class="note"><b>Внимание к нумерации.</b> В <code>getRange</code> строки и колонки считаются с 1, как в таблице. В массиве <code>values</code> — с 0. Поэтому E2 — это <code>values[1][4]</code>.</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <h2><span class="num">5</span>Оформить</h2>
+      <table class="map">
+        <tr><th>Команда</th><th>Что делает</th></tr>
+        <tr><td><code>.setBackground('#1f2a44')</code></td><td>Цвет заливки</td></tr>
+        <tr><td><code>.setFontColor('#ffffff')</code></td><td>Цвет текста</td></tr>
+        <tr><td><code>.setFontWeight('bold')</code></td><td>Жирный</td></tr>
+        <tr><td><code>.setFontFamily('Arial').setFontSize(10)</code></td><td>Шрифт и размер</td></tr>
+        <tr><td><code>.setNumberFormat('dd.MM.yyyy')</code></td><td>Формат даты или числа (<code>'0.0'</code> — один знак после запятой)</td></tr>
+        <tr><td><code>sheet.setFrozenRows(1)</code></td><td>Закрепить шапку</td></tr>
+        <tr><td><code>sheet.autoResizeColumns(1, 12)</code></td><td>Ширина колонок 1–12 по содержимому</td></tr>
+        <tr><td><code>.clearContent()</code> / <code>.clearFormat()</code></td><td>Стереть значения / оформление</td></tr>
+      </table>
+      <div class="note">Команды оформления можно писать цепочкой: <code>range.setBackground(...).setFontColor(...).setFontWeight('bold')</code>.</div>
+    </section>
+
+    <section class="slide">
+      <h2><span class="num">6</span>Сказать пользователю</h2>
+      <div class="cols">
+<pre class="code">// Всплывающее сообщение в углу таблицы
+SpreadsheetApp.getActive().toast('Готово!', 'Скрипт', 5);
+
+// Окно с кнопкой ОК (только при запуске из таблицы)
+SpreadsheetApp.getUi().alert('Найдено 12 просрочек');
+
+// Сообщение в журнал выполнения (видит только автор)
+console.log('Строк обработано: ' + rows.length);</pre>
+        <div>
+          <p><code>toast</code> — ненавязчиво: появилось и исчезло через 5 секунд.</p>
+          <p><code>alert</code> — требует нажать ОК. Подходит для важного: «Удалить 40 строк?» (подробнее — в модуле 3).</p>
+          <p><code>console.log</code> — для отладки. Пользователь его не увидит.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <h2><span class="num">7</span>Частые ошибки</h2>
+      <div class="note err"><b>TypeError: Cannot read properties of null (reading 'getRange')</b><br><code>getSheetByName</code> не нашёл лист и вернул <code>null</code>. Проверьте название листа: лишний пробел, другая буква, лист переименовали.</div>
+      <div class="note err"><b>Exception: The number of rows in the data does not match the number of rows in the range</b><br>Размер массива в <code>setValues</code> не совпадает с размером диапазона. Берите размер из самого массива: <code>getRange(2, 1, rows.length, rows[0].length)</code>.</div>
+      <div class="note err"><b>Exception: The coordinates of the range are outside the dimensions of the sheet</b><br>Просим строку 0 или больше строк, чем есть на листе. Помните: в <code>getRange</code> отсчёт с 1.</div>
+      <div class="note err"><b>Скрипт работает, но очень медленно</b><br>Внутри цикла стоят <code>getValue</code> или <code>setValue</code>. Прочитайте всё одним <code>getValues</code>, обработайте массив и запишите одним <code>setValues</code>.</div>
+    </section>
+
+    <section class="slide">
+      <h2><span class="num">8</span>Почитать подробнее</h2>
+      <ul>
+        <li><a href="https://developers.google.com/apps-script/reference/spreadsheet">Справочник Spreadsheet Service</a> — все команды с примерами (на английском)</li>
+        <li><a href="https://developers.google.com/apps-script/quickstart/fundamentals-codelabs?hl=RU">Практикумы Google «Основы Apps Script с использованием Sheets»</a>, особенно №2 «Электронные таблицы, листы и диапазоны»</li>
+      </ul>
+      <p><b>Назад:</b> <a href="sh1-variables.html">Ш1. Переменные и типы</a> · <b>На главную:</b> <a href="../index.html">все материалы</a></p>
+    </section>
+
+  </main>
+
+  <nav class="controls">
+    <button type="button" data-prev>← Назад</button>
+    <span class="count" data-count></span>
+    <button type="button" data-next>Дальше →</button>
+  </nav>
+</div>
+<script src="../assets/slides.js"></script>
+</body>
+</html>

@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ш1. Переменные и типы — Скрипты для Google Таблиц</title>
+<link rel="stylesheet" href="../assets/slides.css">
+</head>
+<body>
+<div class="progress"></div>
+<div class="deck">
+  <div class="topbar">
+    <div><span class="badge">Ш1</span>Переменные и типы</div>
+    <a href="../index.html">← Все материалы курса</a>
+  </div>
+
+  <main class="stage">
+
+    <section class="slide title">
+      <div class="kicker">Шпаргалка · нужна с модуля 1</div>
+      <h1>Переменные и типы</h1>
+      <p class="lead">Переменная — подписанная коробка, в которую скрипт кладёт значение: имя листа, число заказов, дату. Здесь — как их создавать и какие значения бывают.</p>
+      <p class="lead">← → листать · Home — в начало</p>
+    </section>
+
+    <section class="slide">
+      <h2><span class="num">1</span>const и let</h2>
+      <div class="cols">
+<pre class="code">const sheetName = 'Заказы';   // не меняется
+let count = 0;                // будет меняться
+
+count = count + 1;            // теперь 1
+count += 1;                   // теперь 2
+
+sheetName = 'Архив';          // ошибка!</pre>
+        <div>
+          <p><code>const</code> — коробка с крышкой на замке. Положили значение один раз, и всё.</p>
+          <p><code>let</code> — коробка, в которую можно класть новое значение: счётчики, суммы, «последняя найденная строка».</p>
+          <div class="note"><b>Правило:</b> по умолчанию пишем <code>const</code>. Меняем на <code>let</code>, только когда значение правда должно меняться.</div>
+          <p style="margin-top:14px">В старом коде и в записанных макросах встречается <code>var</code>. Он работает как <code>let</code>, но с подвохами. Сами его не пишем.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <h2><span class="num">2</span>Какие бывают значения</h2>
+      <table class="map">
+        <tr><th>Тип</th><th>Пример в коде</th><th>Откуда берётся в таблице</th></tr>
+        <tr><td>Строка (текст)</td><td><code>'Заказы'</code>, <code>"Готов"</code></td><td>Ячейка с текстом</td></tr>
+        <tr><td>Число</td><td><code>3.5</code>, <code>200</code>, <code>-1</code></td><td>Ячейка с числом. Дробная часть — через точку, не запятую</td></tr>
+        <tr><td>Логическое</td><td><code>true</code>, <code>false</code></td><td>Ячейка с флажком (чекбоксом)</td></tr>
+        <tr><td>Дата</td><td><code>new Date()</code></td><td>Ячейка с датой или временем</td></tr>
+        <tr><td>Пусто</td><td><code>''</code></td><td>Пустая ячейка приходит как пустая строка, а не как 0</td></tr>
+      </table>
+      <div class="note">Узнать тип значения: <code>typeof value</code> вернёт <code>'string'</code>, <code>'number'</code> или <code>'boolean'</code>. Для дат: <code>value instanceof Date</code>.</div>
+    </section>
+
+    <section class="slide">
+      <h2><span class="num">3</span>Склеиваем текст</h2>
+      <div class="cols">
+<pre class="code">const name = 'Ольга Л.';
+const count = 7;
+
+// Через плюс
+const a = 'У ' + name + ' заказов: ' + count;
+
+// Через шаблон: обратные кавычки и ${...}
+const b = `У ${name} заказов: ${count}`;
+
+// Оба варианта дают:
+// У Ольга Л. заказов: 7</pre>
+        <div>
+          <p>Строки можно писать в одинарных <code>'…'</code> или двойных <code>"…"</code> кавычках — разницы нет. Главное, чтобы открывающая и закрывающая совпадали.</p>
+          <p>Шаблонная строка в <b>обратных кавычках</b> <code>`…`</code> удобнее, когда в текст надо подставить несколько значений: письма, сообщения, заголовки отчётов.</p>
+          <div class="note">Обратная кавычка на клавиатуре — слева от цифры 1, в английской раскладке.</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <h2><span class="num">4</span>Сравниваем значения</h2>
+      <div class="cols">
+<pre class="code">status === 'Готов'      // равно
+status !== 'Готов'      // не равно
+hours > 8               // больше
+hours &lt;= 8              // меньше или равно
+
+'5' === 5               // false: текст ≠ число
+Number('5') === 5       // true
+
+// Два условия сразу
+status === 'Проблема' &amp;&amp; hours > 8   // И
+status === 'Новый' || status === 'В работе'  // ИЛИ</pre>
+        <div>
+          <p>Сравниваем тремя знаками: <code>===</code> и <code>!==</code>. Двойное <code>==</code> пытается «угадать» тип и иногда угадывает не то.</p>
+          <p>Число из таблицы иногда приходит текстом — например, если в ячейке «3,5». Перед сравнением превратите его в число: <code>Number(...)</code>.</p>
+          <div class="note"><code>&amp;&amp;</code> — «и», <code>||</code> — «или», <code>!</code> — «не». Как И / ИЛИ / НЕ в формулах таблиц.</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <h2><span class="num">5</span>Имена переменных</h2>
+      <div class="cols even">
+        <div>
+          <h3>Так можно</h3>
+<pre class="code">const orders = ...;
+const lastRow = ...;
+const deadlineHours = 24;
+const SHEET_NAME = 'Заказы'; // настройка</pre>
+        </div>
+        <div>
+          <h3>Так нельзя или не стоит</h3>
+<pre class="code">const last row = ...;  // пробел — ошибка
+const 2orders = ...;   // с цифры — ошибка
+const x = ...;         // непонятно, что внутри
+const заказы = ...;    // работает, но не принято</pre>
+        </div>
+      </div>
+      <ul>
+        <li>Регистр важен: <code>sheet</code>, <code>Sheet</code> и <code>SHEET</code> — три разные переменные.</li>
+        <li>Слова склеиваем «верблюдом»: <code>lastRow</code>, <code>overdueOrders</code>.</li>
+        <li>Неизменные настройки — большими буквами: <code>HEADER_COLOR</code>.</li>
+      </ul>
+    </section>
+
+    <section class="slide">
+      <h2><span class="num">6</span>Частые ошибки</h2>
+      <div class="note err"><b>ReferenceError: orderCount is not defined</b><br>Переменной с таким именем нет. Чаще всего — опечатка или другой регистр: объявили <code>orderCount</code>, а пишете <code>ordercount</code>.</div>
+      <div class="note err"><b>TypeError: Assignment to constant variable</b><br>Пытаетесь положить новое значение в <code>const</code>. Замените на <code>let</code>, если значение действительно должно меняться.</div>
+      <div class="note err"><b>Вместо суммы получилось «3,52» или NaN</b><br>Сложили текст с числом: <code>'3,5' + 2</code> даёт <code>'3,52'</code>. Сначала превратите текст в число: <code>Number('3,5'.replace(',', '.'))</code>.</div>
+      <div class="note err"><b>SyntaxError: Unexpected identifier</b><br>Чаще всего — забытая кавычка или скобка в строке выше той, на которую указывает ошибка.</div>
+    </section>
+
+    <section class="slide">
+      <h2><span class="num">7</span>Почитать подробнее</h2>
+      <p class="lead">Учить наизусть не нужно — достаточно узнавать в коде. Если хочется глубже:</p>
+      <ul>
+        <li><a href="https://learn.javascript.ru/variables">Современный учебник JavaScript: Переменные</a></li>
+        <li><a href="https://learn.javascript.ru/types">Современный учебник JavaScript: Типы данных</a></li>
+        <li><a href="https://learn.javascript.ru/comparison">Современный учебник JavaScript: Операторы сравнения</a></li>
+      </ul>
+      <p>Из учебника берём только раздел «Основы JavaScript». Темы про браузер и веб-страницы к Таблицам не относятся.</p>
+      <p><b>Дальше:</b> <a href="sh2-spreadsheetapp.html">Ш2. Карта SpreadsheetApp</a></p>
+    </section>
+
+  </main>
+
+  <nav class="controls">
+    <button type="button" data-prev>← Назад</button>
+    <span class="count" data-count></span>
+    <button type="button" data-next>Дальше →</button>
+  </nav>
+</div>
+<script src="../assets/slides.js"></script>
+</body>
+</html>

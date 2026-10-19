@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Скрипты для Google Таблиц — материалы курса</title>
+<meta name="description" content="Материалы курса ADP по Google Apps Script: песочница, шпаргалки по синтаксису, учебные скрипты.">
+<style>
+  :root { --navy:#1f2a44; --yellow:#e8e13a; --cream:#f7f3e8; --paper:#fffdf7; --muted:#5b6478; --line:#e2dccb; }
+  * { box-sizing: border-box; }
+  body { margin:0; font-family: Arial, Helvetica, sans-serif; background: var(--cream); color: var(--navy); line-height: 1.45; }
+  a { color: inherit; }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 0 16px; }
+
+  header { background: var(--navy); color: #fff; padding: 56px 0 48px; position: relative; overflow: hidden; }
+  header::after { content:""; position:absolute; right:-80px; top:-80px; width:280px; height:280px; border-radius:50%; background: var(--yellow); }
+  .kicker { color: var(--yellow); font-weight: 700; letter-spacing: .08em; text-transform: uppercase; font-size: 13px; }
+  h1 { font-size: 44px; line-height: 1.1; margin: 10px 0 14px; max-width: 720px; position: relative; z-index: 1; }
+  header p { font-size: 19px; color: #c9cfdd; max-width: 640px; margin: 0; position: relative; z-index: 1; }
+
+  section { padding: 40px 0 8px; }
+  h2 { font-size: 26px; margin: 0 0 6px; }
+  .sub { color: var(--muted); margin: 0 0 20px; }
+
+  .sandbox { background: var(--paper); border: 2px solid var(--yellow); border-radius: 12px; padding: 24px; display: grid; grid-template-columns: 1fr auto; gap: 20px; align-items: center; }
+  .sandbox h3 { margin: 0 0 6px; font-size: 20px; }
+  .sandbox p { margin: 0; color: var(--muted); }
+  .btn { display: inline-block; background: var(--navy); color: #fff; text-decoration: none; font-weight: 700; padding: 12px 20px; border-radius: 8px; white-space: nowrap; }
+  .btn:hover { background: #2b3a5c; }
+  .hint { font-size: 13px; color: var(--muted); margin-top: 8px !important; }
+
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 16px; }
+  .card { background: var(--paper); border: 1px solid var(--line); border-radius: 12px; padding: 18px; display: flex; flex-direction: column; gap: 6px; text-decoration: none; }
+  a.card:hover { border-color: var(--navy); }
+  .card .tag { font-size: 12px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; }
+  .card h3 { margin: 0; font-size: 18px; }
+  .card p { margin: 0; font-size: 15px; color: var(--muted); }
+  .card .go { margin-top: auto; padding-top: 8px; font-weight: 700; font-size: 15px; }
+  .card.soon { opacity: .55; }
+  .card.soon .go { color: var(--muted); font-weight: 400; }
+
+  ol.modules { list-style: none; padding: 0; margin: 0; display: grid; gap: 8px; }
+  ol.modules li { background: var(--paper); border: 1px solid var(--line); border-radius: 10px; padding: 12px 16px; display: grid; grid-template-columns: 44px 1fr auto; gap: 12px; align-items: baseline; }
+  ol.modules .n { font-weight: 700; font-size: 20px; }
+  ol.modules .t { font-weight: 700; }
+  ol.modules .d { color: var(--muted); font-size: 15px; display: block; font-weight: 400; }
+  ol.modules .s { font-size: 14px; color: var(--muted); white-space: nowrap; }
+  ol.modules .s a { font-weight: 700; color: var(--navy); }
+
+  footer { padding: 40px 0 56px; color: var(--muted); font-size: 14px; }
+
+  @media (max-width: 680px) {
+    h1 { font-size: 32px; }
+    .sandbox { grid-template-columns: 1fr; }
+    ol.modules li { grid-template-columns: 32px 1fr; }
+    ol.modules .s { grid-column: 2; white-space: normal; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <div class="kicker">ADP · Admin Development Program</div>
+    <h1>Скрипты для Google Таблиц</h1>
+    <p>Курс о том, как находить в своей работе рутину и отдавать её скрипту: от кнопки «оформить» до отчётов, которые сами приходят по понедельникам.</p>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <section id="sandbox">
+    <h2>Начните здесь</h2>
+    <p class="sub">Все примеры курса работают на учебной таблице с вымышленными данными.</p>
+    <div class="sandbox">
+      <div>
+        <h3>Песочница</h3>
+        <p>200 заказов, 30 сотрудников, рабочие часы за 8 недель и «грязная» выгрузка для тренировки. Ломать можно смело.</p>
+        <p class="hint">Скачайте файл и откройте его в Google Таблицах: Файл → Импортировать → Загрузить.</p>
+      </div>
+      <a class="btn" href="assets/sandbox.xlsx" download>Скачать песочницу</a>
+    </div>
+  </section>
+
+  <section id="modules">
+    <h2>Модули курса</h2>
+    <p class="sub">Тексты уроков и тесты — на учебной платформе. Здесь — карта курса и ссылки на скрипты.</p>
+    <ol class="modules">
+      <li><span class="n">0</span><span class="t">Галерея идей<span class="d">15 автоматизаций «до и после», карта идей по ролям</span></span><span class="s">без кода</span></li>
+      <li><span class="n">1</span><span class="t">Среда Apps Script<span class="d">Редактор, первый запуск, порядок в проекте</span></span><span class="s"><a href="https://github.com/EternaF0rren/apps-script-course/tree/main/scripts/m01">скрипты →</a></span></li>
+      <li><span class="n">2</span><span class="t">Макросы и форматирование<span class="d">Запись макроса, форматирование с условиями, чистка выгрузки</span></span><span class="s"><a href="https://github.com/EternaF0rren/apps-script-course/tree/main/scripts/m02">скрипты →</a></span></li>
+      <li><span class="n">3</span><span class="t">Как запускать скрипты<span class="d">Своё меню, кнопки, чекбоксы, диалоги</span></span><span class="s">скоро</span></li>
+      <li><span class="n">4</span><span class="t">ИИ-соавтор, отладка, безопасность<span class="d">Как просить код у ИИ, проверять и чинить его</span></span><span class="s">скоро</span></li>
+      <li><span class="n">5</span><span class="t">Автоматизация рутины<span class="d">Триггеры, архив, файлы по шаблону, уведомления</span></span><span class="s">скоро</span></li>
+      <li><span class="n">6</span><span class="t">Работа с данными<span class="d">Массивы, чистка, сбор из многих таблиц, сверка</span></span><span class="s">скоро</span></li>
+      <li><span class="n">7</span><span class="t">Свои формулы<span class="d">Пользовательские функции вместо вложенных ЕСЛИ</span></span><span class="s">скоро</span></li>
+      <li><span class="n">8</span><span class="t">Статистика и графики<span class="d">Метрики, тренды, выбросы, дашборд, отчёт по расписанию</span></span><span class="s">скоро</span></li>
+    </ol>
+  </section>
+
+  <section id="cheatsheets">
+    <h2>Шпаргалки по синтаксису</h2>
+    <p class="sub">Короткие презентации: слева код, справа — что он делает в таблице. Листаются стрелками.</p>
+    <div class="grid">
+      <a class="card" href="cheatsheets/sh1-variables.html"><span class="tag">Ш1 · с модуля 1</span><h3>Переменные и типы</h3><p>const и let, строки, числа, даты, сравнение</p><span class="go">Открыть →</span></a>
+      <a class="card" href="cheatsheets/sh2-spreadsheetapp.html"><span class="tag">Ш2 · с модуля 2</span><h3>Карта SpreadsheetApp</h3><p>От таблицы до ячейки: 20 нужных команд</p><span class="go">Открыть →</span></a>
+      <div class="card soon"><span class="tag">Ш3 · с модуля 3</span><h3>Условия и циклы</h3><p>if/else, for, forEach</p><span class="go">Скоро</span></div>
+      <div class="card soon"><span class="tag">Ш4 · с модуля 3</span><h3>Функции</h3><p>Параметры, return, стрелочные функции</p><span class="go">Скоро</span></div>
+      <div class="card soon"><span class="tag">Ш5 · с модуля 6</span><h3>Массивы</h3><p>Двумерный массив, map, filter</p><span class="go">Скоро</span></div>
+      <div class="card soon"><span class="tag">Ш6 · с модуля 6</span><h3>Объекты-словари</h3><p>Ключ-значение, подсчёт по категориям</p><span class="go">Скоро</span></div>
+      <div class="card soon"><span class="tag">Ш7 · с модуля 5</span><h3>Даты и строки</h3><p>new Date, форматирование, часовые пояса</p><span class="go">Скоро</span></div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">Все данные в материалах вымышлены. Скрипты курса — в папке <a href="https://github.com/EternaF0rren/apps-script-course/tree/main/scripts">scripts</a> репозитория.</div>
+</footer>
+
+</body>
+</html>
