@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ш3. Условия и циклы — Скрипты для Google Таблиц</title>
+<link rel="stylesheet" href="../assets/slides.css">
+</head>
+<body>
+<div class="progress"></div>
+<div class="deck">
+  <div class="topbar">
+    <div><span class="badge">Ш3</span>Условия и циклы</div>
+    <a href="../index.html">← Все материалы курса</a>
+  </div>
+
+  <main class="stage">
+
+    <section class="slide title">
+      <div class="kicker">Шпаргалка · нужна с модуля 3</div>
+      <h1>Условия и циклы</h1>
+      <p class="lead">Условие — «если так, сделай это». Цикл — «сделай это для каждой строки». Из этих двух кирпичиков собран почти любой скрипт для таблиц.</p>
+      <p class="lead">← → листать · Home — в начало</p>
+    </section>
+
+    <section class="slide">
+      <h2><span class="num">1</span>if и else</h2>
+      <div class="cols">
+<pre class="code">if (status === 'Проблема') {
+  sheet.getRange(row, 5).setFontColor('#c62828');
+}
+
+if (hours > 8) {
+  label = 'Долго';
+} else {
+  label = 'Норма';
+}</pre>
+        <div>
+          <p><code>if (условие) { … }</code> — код в фигурных скобках выполняется, только если условие верно.</p>
+          <p><code>else { … }</code> — что делать в противном случае. Необязательная часть.</p>
+          <div class="note">Как ЕСЛИ в формулах: <code>=ЕСЛИ(I2&gt;8; "Долго"; "Норма")</code> делает то же самое.</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <h2><span class="num">2</span>Несколько вариантов</h2>
+      <div class="cols">
+<pre class="code">if (hoursLeft &lt; 0) {
+  color = 'красный';        // просрочен
+} else if (hoursLeft &lt; 4) {
+  color = 'жёлтый';         // горит
+} else {
+  color = 'зелёный';        // время есть
+}
+
+// Короткая запись для двух вариантов
+const label = hours > 8 ? 'Долго' : 'Норма';</pre>
+        <div>
+          <p><code>else if</code> — следующая проверка, если предыдущая не сработала. Проверки идут сверху вниз, срабатывает первая подходящая.</p>
+          <p>Короткая запись <code>условие ? если_да : если_нет</code> удобна, когда нужно просто выбрать одно из двух значений.</p>
+          <div class="note">Вместо вложенных ЕСЛИ на полэкрана — понятная лестница <code>else if</code>. Это одна из главных причин переносить сложные формулы в скрипт.</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <h2><span class="num">3</span>Цикл for по строкам</h2>
+      <div class="cols">
+<pre class="code">const values = sheet.getDataRange().getValues();
+
+// i = 0 — шапка, поэтому начинаем с 1
+for (let i = 1; i &lt; values.length; i++) {
+  const row = values[i];
+  if (row[4] === 'Проблема') {
+    console.log('Проблема в заказе ' + row[0]);
+  }
+}</pre>
+        <div>
+          <p><code>for (начало; условие; шаг)</code> читается так: «начни с i = 1; пока i меньше числа строк; после каждого круга прибавь 1».</p>
+          <p>Внутри цикла <code>values[i]</code> — очередная строка таблицы, <code>row[4]</code> — её пятая колонка (E).</p>
+          <div class="note">Номер строки в таблице = <code>i + 1</code>: массив считается с 0, а таблица — с 1.</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <h2><span class="num">4</span>for…of и forEach</h2>
+      <div class="cols">
+<pre class="code">// Когда номер строки не нужен
+for (const row of values.slice(1)) {
+  console.log(row[0]);
+}
+
+// То же самое через forEach
+values.slice(1).forEach(function (row, i) {
+  // i — порядковый номер, начиная с 0
+  console.log(i + ': ' + row[0]);
+});
+
+// Обойти все листы таблицы
+ss.getSheets().forEach(function (sheet) {
+  sheet.setFrozenRows(1);
+});</pre>
+        <div>
+          <p><code>for…of</code> и <code>forEach</code> — «для каждого элемента списка». Пишутся короче, чем классический <code>for</code>.</p>
+          <p><code>values.slice(1)</code> — все строки, кроме первой (шапки).</p>
+          <div class="note">Выбирайте любой вариант — все три делают одно и то же. В коде от ИИ встретятся все три.</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <h2><span class="num">5</span>Посчитать и отобрать</h2>
+      <div class="cols">
+<pre class="code">// Счётчик
+let problems = 0;
+for (const row of values.slice(1)) {
+  if (row[4] === 'Проблема') problems++;
+}
+
+// То же через filter: «оставь только подходящие»
+const open = values.slice(1).filter(function (row) {
+  return row[4] !== 'Готов';
+});
+console.log('Открытых: ' + open.length);
+
+// Сумма часов
+let total = 0;
+values.slice(1).forEach(function (row) {
+  total += row[8];
+});</pre>
+        <div>
+          <p>Три самых частых шаблона: <b>посчитать</b> (счётчик <code>++</code>), <b>отобрать</b> (<code>filter</code>), <b>сложить</b> (<code>+=</code>).</p>
+          <p><code>problems++</code> — прибавить 1. <code>total += row[8]</code> — прибавить значение из колонки I.</p>
+          <div class="note">Это аналоги СЧЁТЕСЛИ, ФИЛЬТР и СУММЕСЛИ — только с любыми условиями, какие придумаете.</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <h2><span class="num">6</span>Частые ошибки</h2>
+      <div class="note err"><b>if (status = 'Готов')</b><br>Одно <code>=</code> — это присваивание, а не сравнение. Условие всегда окажется верным. Сравниваем тремя знаками: <code>===</code>.</div>
+      <div class="note err"><b>Цикл обрабатывает шапку как данные</b><br>Начали с <code>i = 0</code> или забыли <code>slice(1)</code>. Шапка — строка 0 массива.</div>
+      <div class="note err"><b>TypeError: Cannot read properties of undefined</b><br>Условие <code>i &lt;= values.length</code> вместо <code>i &lt; values.length</code>: на последнем круге строки с таким номером нет.</div>
+      <div class="note err"><b>Скрипт работает минуты и падает по времени</b><br>Внутри цикла стоят <code>getValue</code> / <code>setValue</code>. Читаем всё до цикла, пишем всё после цикла.</div>
+    </section>
+
+    <section class="slide">
+      <h2><span class="num">7</span>Почитать подробнее</h2>
+      <ul>
+        <li><a href="https://learn.javascript.ru/ifelse">Современный учебник JavaScript: Условное ветвление</a></li>
+        <li><a href="https://learn.javascript.ru/logical-operators">Современный учебник JavaScript: Логические операторы</a></li>
+        <li><a href="https://learn.javascript.ru/while-for">Современный учебник JavaScript: Циклы while и for</a></li>
+        <li><a href="https://learn.javascript.ru/array-methods">Современный учебник JavaScript: Методы массивов</a> — forEach, filter, map</li>
+      </ul>
+      <p><b>Назад:</b> <a href="sh2-spreadsheetapp.html">Ш2. Карта SpreadsheetApp</a> · <b>Дальше:</b> <a href="sh4-functions.html">Ш4. Функции</a></p>
+    </section>
+
+  </main>
+
+  <nav class="controls">
+    <button type="button" data-prev>← Назад</button>
+    <span class="count" data-count></span>
+    <button type="button" data-next>Дальше →</button>
+  </nav>
+</div>
+<script src="../assets/slides.js"></script>
+</body>
+</html>

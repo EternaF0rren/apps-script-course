@@ -130,6 +130,8 @@ table.map td:first-child { white-space: nowrap; }
   .slide h2 { font-size: 22px; }
   .cols, .cols.even { grid-template-columns: 1fr; }
   pre.code { font-size: 13px; }
+  table.map { display: block; overflow-x: auto; font-size: 14px; }
+  table.map td:first-child { white-space: normal; }
   .controls button { min-width: 0; padding: 8px 12px; }
 }
 

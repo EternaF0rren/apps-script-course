@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ш4. Функции — Скрипты для Google Таблиц</title>
+<link rel="stylesheet" href="../assets/slides.css">
+</head>
+<body>
+<div class="progress"></div>
+<div class="deck">
+  <div class="topbar">
+    <div><span class="badge">Ш4</span>Функции</div>
+    <a href="../index.html">← Все материалы курса</a>
+  </div>
+
+  <main class="stage">
+
+    <section class="slide title">
+      <div class="kicker">Шпаргалка · нужна с модуля 3</div>
+      <h1>Функции</h1>
+      <p class="lead">Функция — именованный набор действий. Одни функции запускает человек из меню, другие — сами скрипты как помощников. Здесь — как их писать и не путаться.</p>
+      <p class="lead">← → листать · Home — в начало</p>
+    </section>
+
+    <section class="slide">
+      <h2><span class="num">1</span>Объявить и вызвать</h2>
+      <div class="cols">
+<pre class="code">// Объявляем
+function sayHello() {
+  SpreadsheetApp.getActive().toast('Привет!');
+}
+
+// Вызываем из другой функции — со скобками
+function main() {
+  sayHello();
+}</pre>
+        <div>
+          <p><code>function имя() { … }</code> — объявление. Код внутри не выполняется, пока функцию не вызовут.</p>
+          <p><code>имя()</code> — вызов. Скобки обязательны: без них функция не запустится.</p>
+          <div class="note">Из меню и кнопок функцию назначают по имени <b>без скобок</b>: <code>addItem('Привет', 'sayHello')</code>.</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <h2><span class="num">2</span>Параметры и return</h2>
+      <div class="cols">
+<pre class="code">// hours — параметр: значение, которое передают снаружи
+function hoursToText(hours) {
+  const h = Math.floor(hours);
+  const m = Math.round((hours - h) * 60);
+  return h + ' ч ' + m + ' мин';
+}
+
+hoursToText(2.25)   // '2 ч 15 мин'
+hoursToText(0.5)    // '0 ч 30 мин'
+
+// Несколько параметров — через запятую
+function isLate(deadline, done) {
+  return done > deadline;
+}</pre>
+        <div>
+          <p><b>Параметры</b> — то, что функция получает на вход. <b>return</b> — то, что она отдаёт обратно.</p>
+          <p>Как формула в таблице: <code>=ОКРУГЛ(A1; 2)</code> получает число и точность и возвращает результат.</p>
+          <div class="note"><code>return</code> сразу завершает функцию. Всё, что ниже него, не выполнится.</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <h2><span class="num">3</span>Два вида функций в проекте</h2>
+      <table class="map">
+        <tr><th>Вид</th><th>Пример</th><th>Кто запускает</th></tr>
+        <tr><td>Действие</td><td><code>formatOrdersSheet()</code></td><td>Человек: из меню, кнопкой, из редактора. Параметров нет</td></tr>
+        <tr><td>Помощник</td><td><code>parseDate_(value)</code></td><td>Другие функции. Получает параметры, возвращает результат. В конце имени — подчёркивание, чтобы не мешал в списке запуска</td></tr>
+        <tr><td>Особое имя</td><td><code>onOpen()</code>, <code>onEdit(e)</code></td><td>Таблица сама: при открытии, при правке</td></tr>
+        <tr><td>Своя формула</td><td><code>РАБДНИ_СТРАНЫ(...)</code></td><td>Ячейка таблицы (модуль 7)</td></tr>
+      </table>
+      <div class="note">Хороший признак: функция-действие короткая и читается как план, а вся «механика» спрятана в помощниках.</div>
+    </section>
+
+    <section class="slide">
+      <h2><span class="num">4</span>Короткая запись: стрелочные функции</h2>
+      <div class="cols">
+<pre class="code">// Обычная запись
+const open = values.filter(function (row) {
+  return row[4] !== 'Готов';
+});
+
+// Стрелочная — то же самое
+const open2 = values.filter(row => row[4] !== 'Готов');
+
+// Стрелочная с несколькими строками
+const ids = values.map(row => {
+  const id = row[0];
+  return id.toUpperCase();
+});</pre>
+        <div>
+          <p>Стрелка <code>=&gt;</code> — короткий способ написать функцию «на один раз», чаще всего внутри <code>filter</code>, <code>map</code>, <code>forEach</code>.</p>
+          <p>Если тело в одну строку и без фигурных скобок, <code>return</code> подставляется сам.</p>
+          <div class="note">ИИ часто пишет стрелками. Читайте <code>row =&gt; …</code> как «для каждой строки row верни …».</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <h2><span class="num">5</span>Что видно внутри и снаружи</h2>
+      <div class="cols">
+<pre class="code">const SHEET = 'Заказы';      // видна всем функциям проекта
+
+function countOrders() {
+  const sheet = getSheet(SHEET);   // видна только здесь
+  return sheet.getLastRow() - 1;
+}
+
+function report() {
+  console.log(countOrders());  // 200
+  console.log(sheet);          // ошибка: sheet is not defined
+}</pre>
+        <div>
+          <p>Переменная, объявленная <b>внутри</b> функции, живёт только в ней. Другие функции её не видят.</p>
+          <p>Константы <b>вне</b> функций (как в <code>Config.gs</code>) видны во всём проекте, во всех файлах.</p>
+          <div class="note">Нужно передать значение из одной функции в другую — передавайте параметром или через <code>return</code>.</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <h2><span class="num">6</span>Частые ошибки</h2>
+      <div class="note err"><b>Функция вернула undefined</b><br>Забыли <code>return</code>. Функция всё посчитала, но ничего не отдала обратно.</div>
+      <div class="note err"><b>TypeError: Cannot read properties of undefined (reading 'range')</b><br>Запустили <code>onEdit(e)</code> из редактора. Объект <code>e</code> приходит только при настоящей правке в таблице — проверяйте, редактируя ячейку.</div>
+      <div class="note err"><b>TypeError: … is not a function</b><br>Вызвали как функцию то, что ею не является: опечатка в имени или скобки после переменной.</div>
+      <div class="note err"><b>Script function not found</b><br>В меню или на кнопке указано имя функции, которой нет в проекте, или имя со скобками: <code>'sayHello()'</code> вместо <code>'sayHello'</code>.</div>
+    </section>
+
+    <section class="slide">
+      <h2><span class="num">7</span>Почитать подробнее</h2>
+      <ul>
+        <li><a href="https://learn.javascript.ru/function-basics">Современный учебник JavaScript: Функции</a></li>
+        <li><a href="https://learn.javascript.ru/arrow-functions-basics">Современный учебник JavaScript: Стрелочные функции, основы</a></li>
+      </ul>
+      <p><b>Назад:</b> <a href="sh3-conditions-loops.html">Ш3. Условия и циклы</a> · <b>На главную:</b> <a href="../index.html">все материалы</a></p>
+    </section>
+
+  </main>
+
+  <nav class="controls">
+    <button type="button" data-prev>← Назад</button>
+    <span class="count" data-count></span>
+    <button type="button" data-next>Дальше →</button>
+  </nav>
+</div>
+<script src="../assets/slides.js"></script>
+</body>
+</html>
