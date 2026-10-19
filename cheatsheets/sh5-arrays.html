@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ш5. Массивы — Скрипты для Google Таблиц</title>
+<link rel="stylesheet" href="../assets/slides.css">
+</head>
+<body>
+<div class="progress"></div>
+<div class="deck">
+  <div class="topbar">
+    <div><span class="badge">Ш5</span>Массивы</div>
+    <a href="../index.html">← Все материалы курса</a>
+  </div>
+
+  <main class="stage">
+
+    <section class="slide title">
+      <div class="kicker">Шпаргалка · нужна с модуля 6</div>
+      <h1>Массивы</h1>
+      <p class="lead">Массив — список значений. Всё, что скрипт читает из таблицы через getValues, приходит массивом строк, а каждая строка — массив ячеек. Научитесь ходить по этим спискам — и любая обработка данных станет быстрой.</p>
+      <p class="lead">← → листать · Home — в начало</p>
+    </section>
+
+    <section class="slide">
+      <h2><span class="num">1</span>Список в квадратных скобках</h2>
+      <div class="cols">
+<pre class="code">const statuses = ['Новый', 'В работе', 'Готов'];
+
+statuses[0]        // 'Новый' — счёт с нуля!
+statuses[2]        // 'Готов'
+statuses.length    // 3 — сколько элементов
+statuses.at(-1)    // 'Готов' — последний
+
+statuses.push('Проблема');   // добавить в конец
+statuses.length    // 4</pre>
+        <div>
+          <p>Элементы считаются <b>с нуля</b>: первый — <code>[0]</code>, второй — <code>[1]</code>.</p>
+          <p><code>length</code> — сколько элементов. Последний элемент — <code>[length - 1]</code> или <code>at(-1)</code>.</p>
+          <div class="note">В таблице строки и колонки считаются с 1, в массиве — с 0. Это главный источник путаницы. Держите в голове: «в массиве на один меньше».</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <h2><span class="num">2</span>Таблица — это массив массивов</h2>
+      <div class="cols">
+<pre class="code">const values = sheet.getRange('A1:C3').getValues();
+// [
+//   ['ID',       'Создан', 'Дедлайн'],  ← [0]
+//   ['ORD-1001', дата,     дата],       ← [1]
+//   ['ORD-1002', дата,     дата],       ← [2]
+// ]
+
+values[1][0]     // 'ORD-1001' — строка 2, колонка A
+values.length    // 3 — строк
+values[0].length // 3 — колонок</pre>
+        <div>
+          <p>Первая скобка — номер строки, вторая — номер колонки. Оба с нуля.</p>
+          <table class="map">
+            <tr><th>Ячейка</th><th>В массиве</th></tr>
+            <tr><td>A1</td><td><code>values[0][0]</code></td></tr>
+            <tr><td>E2</td><td><code>values[1][4]</code></td></tr>
+            <tr><td>Строка N, колонка M</td><td><code>values[N-1][M-1]</code></td></tr>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <h2><span class="num">3</span>Одна колонка — тоже двумерная</h2>
+      <div class="cols">
+<pre class="code">// Колонка I (часы) из трёх строк
+sheet.getRange('I2:I4').getValues()
+// [[3.5], [4.0], [2.2]]  — не [3.5, 4.0, 2.2]!
+
+// Сделать плоский список
+const hours = sheet.getRange('I2:I4').getValues()
+  .map(row => row[0]);           // [3.5, 4.0, 2.2]
+
+// Обратно для записи — каждое число в свои скобки
+sheet.getRange('P2:P4')
+  .setValues(hours.map(h => [h * 2]));</pre>
+        <div>
+          <p><code>getValues</code> <b>всегда</b> возвращает массив строк — даже если колонка одна.</p>
+          <p>И <code>setValues</code> всегда ждёт массив строк. Плоский список <code>[1, 2, 3]</code> он не примет.</p>
+          <div class="note"><code>map(row =&gt; row[0])</code> — «разверни в плоский список». <code>map(x =&gt; [x])</code> — «заверни обратно».</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <h2><span class="num">4</span>map, filter, find, some</h2>
+      <table class="map">
+        <tr><th>Метод</th><th>Что делает</th><th>Пример</th></tr>
+        <tr><td><code>forEach</code></td><td>Сделать что-то для каждого элемента</td><td><code>rows.forEach(r =&gt; console.log(r[0]))</code></td></tr>
+        <tr><td><code>map</code></td><td>Превратить каждый элемент в новый</td><td><code>rows.map(r =&gt; r[0])</code> — список ID</td></tr>
+        <tr><td><code>filter</code></td><td>Оставить подходящие</td><td><code>rows.filter(r =&gt; r[4] === 'Проблема')</code></td></tr>
+        <tr><td><code>find</code></td><td>Найти первый подходящий</td><td><code>rows.find(r =&gt; r[0] === 'ORD-1001')</code></td></tr>
+        <tr><td><code>some</code></td><td>Есть ли хоть один подходящий</td><td><code>rows.some(r =&gt; r[8] &gt; 24)</code> → true/false</td></tr>
+        <tr><td><code>includes</code></td><td>Есть ли значение в списке</td><td><code>['Готов','Проблема'].includes(status)</code></td></tr>
+      </table>
+      <div class="note">Методы можно соединять цепочкой: <code>rows.filter(…).map(…)</code> — «отбери, потом преврати».</div>
+    </section>
+
+    <section class="slide">
+      <h2><span class="num">5</span>Срезать, склеить, отсортировать</h2>
+      <div class="cols">
+<pre class="code">values.slice(1)          // все строки, кроме шапки
+values.slice(0, 10)      // первые 10 строк
+
+[1, 2].concat([3, 4])    // [1, 2, 3, 4]
+['ID'].concat(row)       // добавить колонку слева
+
+// Сортировка текста — сразу работает
+names.sort();
+
+// Сортировка чисел — нужна функция сравнения!
+[10, 9, 100].sort()                // [10, 100, 9] ✗
+[10, 9, 100].sort((a, b) => a - b) // [9, 10, 100] ✓
+
+// Строки таблицы по часам, по убыванию
+rows.sort((a, b) => b[8] - a[8]);</pre>
+        <div>
+          <p><code>slice</code> не меняет исходный массив, а возвращает новый. Удобно, чтобы отрезать шапку.</p>
+          <p><code>sort</code> без аргументов сравнивает всё как текст. Для чисел и дат пишите функцию: <code>(a, b) =&gt; a - b</code> — по возрастанию, <code>b - a</code> — по убыванию.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <h2><span class="num">6</span>Частые ошибки</h2>
+      <div class="note err"><b>The parameters (number[]) don't match the method signature for SpreadsheetApp.Range.setValues</b><br>В <code>setValues</code> передали плоский список. Заверните каждый элемент: <code>list.map(x =&gt; [x])</code>.</div>
+      <div class="note err"><b>Сравнение values[i] === 'Готов' всегда false</b><br>Сравнили целую строку с текстом. Нужна ячейка: <code>values[i][4] === 'Готов'</code>.</div>
+      <div class="note err"><b>Числа отсортировались странно: 10, 100, 9</b><br>Забыли функцию сравнения в <code>sort</code>.</div>
+      <div class="note err"><b>Шапка попала в расчёт</b><br>Забыли <code>slice(1)</code>, и строка с названиями колонок посчиталась как данные.</div>
+    </section>
+
+    <section class="slide">
+      <h2><span class="num">7</span>Почитать подробнее</h2>
+      <ul>
+        <li><a href="https://learn.javascript.ru/array">Современный учебник JavaScript: Массивы</a></li>
+        <li><a href="https://learn.javascript.ru/array-methods">Современный учебник JavaScript: Методы массивов</a></li>
+      </ul>
+      <p><b>Назад:</b> <a href="sh4-functions.html">Ш4. Функции</a> · <b>Дальше:</b> <a href="sh6-objects.html">Ш6. Объекты-словари</a></p>
+    </section>
+
+  </main>
+
+  <nav class="controls">
+    <button type="button" data-prev>← Назад</button>
+    <span class="count" data-count></span>
+    <button type="button" data-next>Дальше →</button>
+  </nav>
+</div>
+<script src="../assets/slides.js"></script>
+</body>
+</html>

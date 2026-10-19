@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ш6. Объекты-словари — Скрипты для Google Таблиц</title>
+<link rel="stylesheet" href="../assets/slides.css">
+</head>
+<body>
+<div class="progress"></div>
+<div class="deck">
+  <div class="topbar">
+    <div><span class="badge">Ш6</span>Объекты-словари</div>
+    <a href="../index.html">← Все материалы курса</a>
+  </div>
+
+  <main class="stage">
+
+    <section class="slide title">
+      <div class="kicker">Шпаргалка · нужна с модуля 6</div>
+      <h1>Объекты-словари</h1>
+      <p class="lead">Объект — набор подписанных полок: на каждой полке лежит значение, а подпись — ключ. С ним считают по группам, ищут по ID и убирают дубли быстрее и понятнее, чем формулами.</p>
+      <p class="lead">← → листать · Home — в начало</p>
+    </section>
+
+    <section class="slide">
+      <h2><span class="num">1</span>Ключ и значение</h2>
+      <div class="cols">
+<pre class="code">const order = {
+  id: 'ORD-1001',
+  status: 'В работе',
+  hours: 3.5,
+};
+
+order.status          // 'В работе'
+order['hours']        // 3.5 — то же через скобки
+order.status = 'Готов';   // поменять
+order.qc = 5;             // добавить новое поле
+
+// Ключ с пробелом или русский — только в скобках
+const counts = {};
+counts['В работе'] = 11;</pre>
+        <div>
+          <p>В фигурных скобках — пары <b>ключ: значение</b> через запятую.</p>
+          <p>Читать и писать можно через точку <code>order.status</code> или через скобки <code>order['status']</code>. Скобки нужны, когда ключ лежит в переменной или в нём есть пробелы.</p>
+          <div class="note">Массив — когда важен порядок: «первый, второй, третий». Объект — когда важно имя: «статус», «часы», «D-004».</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <h2><span class="num">2</span>Посчитать по группам</h2>
+      <div class="cols">
+<pre class="code">const counts = {};
+
+rows.forEach(row => {
+  const status = row[4];
+  counts[status] = (counts[status] || 0) + 1;
+});
+
+// { 'Готов': 170, 'В работе': 11, ... }</pre>
+        <div>
+          <p>Главный шаблон модуля 6. Читается так: «возьми, сколько уже насчитано по этому статусу (или 0, если полки ещё нет), прибавь 1 и положи обратно».</p>
+          <p><code>|| 0</code> нужен потому, что в первый раз полки нет и там <code>undefined</code>.</p>
+          <div class="note">Это СЧЁТЕСЛИ сразу по всем значениям колонки — одним проходом.</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <h2><span class="num">3</span>Карточка со счётчиками</h2>
+      <div class="cols">
+<pre class="code">const byWorker = {};
+
+rows.forEach(row => {
+  const name = row[6];
+  if (!byWorker[name]) {
+    byWorker[name] = { orders: 0, hours: 0 };
+  }
+  byWorker[name].orders++;
+  byWorker[name].hours += row[8];
+});
+
+// {
+//   'Ольга Л.': { orders: 7, hours: 31.5 },
+//   'Глеб Г.':  { orders: 5, hours: 22.0 },
+// }</pre>
+        <div>
+          <p>На полке может лежать не число, а целая карточка с несколькими счётчиками.</p>
+          <p>Сначала проверяем, есть ли карточка (<code>if (!byWorker[name])</code>), и создаём пустую. Потом увеличиваем счётчики.</p>
+          <div class="note">Так за один проход собирается сводная таблица с любыми колонками.</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <h2><span class="num">4</span>Из словаря — в таблицу</h2>
+      <div class="cols">
+<pre class="code">Object.keys(counts)
+// ['Готов', 'В работе', 'Проблема', ...]
+
+Object.entries(counts)
+// [['Готов', 170], ['В работе', 11], ...]
+
+// Сразу готово для setValues!
+const rows = Object.entries(counts);
+sheet.getRange(2, 1, rows.length, 2).setValues(rows);
+
+// С карточками — через map
+const out = Object.keys(byWorker).sort().map(name =>
+  [name, byWorker[name].orders,
+   byWorker[name].hours]);</pre>
+        <div>
+          <p><code>Object.keys</code> — список ключей. <code>Object.entries</code> — список пар «ключ, значение», то есть уже готовые строки для таблицы.</p>
+          <p><code>.sort()</code> перед <code>map</code> — чтобы строки шли по алфавиту.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <h2><span class="num">5</span>Справочник вместо ВПР</h2>
+      <div class="cols">
+<pre class="code">// Один раз строим справочник: ID → строка сотрудника
+const employees = {};
+empValues.slice(1).forEach(r => {
+  employees[r[0]] = r;
+});
+
+// Дальше — мгновенный поиск
+employees['D-004']       // вся строка сотрудника
+employees['D-004'][5]    // его супервайзер
+
+// Есть ли такой ID?
+if (!employees[id]) console.log('Нет ID: ' + id);
+
+// Только уникальные значения — Set
+const ids = new Set(rows.map(r => r[5]));
+ids.has('D-004')   // true
+ids.size           // сколько разных</pre>
+        <div>
+          <p>Справочник — это ВПР, который строится один раз и потом отвечает мгновенно. Для тысяч строк разница огромная.</p>
+          <p><code>Set</code> — набор без повторов. Удобен, когда нужно только «есть / нет» и «сколько разных».</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <h2><span class="num">6</span>Частые ошибки</h2>
+      <div class="note err"><b>Вместо числа получилось NaN</b><br>Прибавили к полке, которой ещё нет: <code>undefined + 1</code>. Нужно <code>(counts[k] || 0) + 1</code> или проверка <code>if (!obj[k])</code>.</div>
+      <div class="note err"><b>Cannot read properties of undefined (reading 'orders')</b><br>Обратились к полю карточки, которую не создали: <code>byWorker[name].orders++</code> без предварительного <code>byWorker[name] = {…}</code>.</div>
+      <div class="note err"><b>«Готов» и «готов» посчитались отдельно</b><br>Ключи различают регистр и пробелы. Перед подсчётом чистите значения: <code>trim()</code>, единый регистр.</div>
+      <div class="note err"><b>В журнале видно [object Object]</b><br>Склеили объект с текстом. Печатайте отдельно: <code>console.log(obj)</code> или <code>JSON.stringify(obj)</code>.</div>
+    </section>
+
+    <section class="slide">
+      <h2><span class="num">7</span>Почитать подробнее</h2>
+      <ul>
+        <li><a href="https://learn.javascript.ru/object">Современный учебник JavaScript: Объекты</a></li>
+        <li><a href="https://learn.javascript.ru/keys-values-entries">Современный учебник JavaScript: Object.keys, values, entries</a></li>
+        <li><a href="https://learn.javascript.ru/map-set">Современный учебник JavaScript: Map и Set</a></li>
+      </ul>
+      <p><b>Назад:</b> <a href="sh5-arrays.html">Ш5. Массивы</a> · <b>Дальше:</b> <a href="sh7-dates-strings.html">Ш7. Даты и строки</a></p>
+    </section>
+
+  </main>
+
+  <nav class="controls">
+    <button type="button" data-prev>← Назад</button>
+    <span class="count" data-count></span>
+    <button type="button" data-next>Дальше →</button>
+  </nav>
+</div>
+<script src="../assets/slides.js"></script>
+</body>
+</html>

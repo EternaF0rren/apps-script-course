@@ -46,7 +46,7 @@ function main() {
     <section class="slide">
       <h2><span class="num">2</span>Параметры и return</h2>
       <div class="cols">
-<pre class="code">// hours — параметр: значение, которое передают снаружи
+<pre class="code">// hours — параметр: значение снаружи
 function hoursToText(hours) {
   const h = Math.floor(hours);
   const m = Math.round((hours - h) * 60);
@@ -89,7 +89,7 @@ const open = values.filter(function (row) {
 });
 
 // Стрелочная — то же самое
-const open2 = values.filter(row => row[4] !== 'Готов');
+const open2 = values.filter(r => r[4] !== 'Готов');
 
 // Стрелочная с несколькими строками
 const ids = values.map(row => {
@@ -107,16 +107,16 @@ const ids = values.map(row => {
     <section class="slide">
       <h2><span class="num">5</span>Что видно внутри и снаружи</h2>
       <div class="cols">
-<pre class="code">const SHEET = 'Заказы';      // видна всем функциям проекта
+<pre class="code">const SHEET = 'Заказы';  // видна всем функциям
 
 function countOrders() {
-  const sheet = getSheet(SHEET);   // видна только здесь
+  const sheet = getSheet(SHEET); // только здесь
   return sheet.getLastRow() - 1;
 }
 
 function report() {
   console.log(countOrders());  // 200
-  console.log(sheet);          // ошибка: sheet is not defined
+  console.log(sheet);  // sheet is not defined
 }</pre>
         <div>
           <p>Переменная, объявленная <b>внутри</b> функции, живёт только в ней. Другие функции её не видят.</p>
@@ -140,7 +140,7 @@ function report() {
         <li><a href="https://learn.javascript.ru/function-basics">Современный учебник JavaScript: Функции</a></li>
         <li><a href="https://learn.javascript.ru/arrow-functions-basics">Современный учебник JavaScript: Стрелочные функции, основы</a></li>
       </ul>
-      <p><b>Назад:</b> <a href="sh3-conditions-loops.html">Ш3. Условия и циклы</a> · <b>На главную:</b> <a href="../index.html">все материалы</a></p>
+      <p><b>Назад:</b> <a href="sh3-conditions-loops.html">Ш3. Условия и циклы</a> · <b>Дальше:</b> <a href="sh5-arrays.html">Ш5. Массивы</a></p>
     </section>
 
   </main>

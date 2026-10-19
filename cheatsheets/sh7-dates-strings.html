@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ш7. Даты и строки — Скрипты для Google Таблиц</title>
+<link rel="stylesheet" href="../assets/slides.css">
+</head>
+<body>
+<div class="progress"></div>
+<div class="deck">
+  <div class="topbar">
+    <div><span class="badge">Ш7</span>Даты и строки</div>
+    <a href="../index.html">← Все материалы курса</a>
+  </div>
+
+  <main class="stage">
+
+    <section class="slide title">
+      <div class="kicker">Шпаргалка · нужна с модуля 5</div>
+      <h1>Даты и строки</h1>
+      <p class="lead">Дедлайны, просрочки, «Отчёт 10.2026», имена с лишними пробелами — почти каждый скрипт работает с датами и текстом. Здесь — как считать, сравнивать и красиво выводить.</p>
+      <p class="lead">← → листать · Home — в начало</p>
+    </section>
+
+    <section class="slide">
+      <h2><span class="num">1</span>Откуда берутся даты</h2>
+      <div class="cols">
+<pre class="code">// Из ячейки с датой — сразу объект Date
+const deadline = values[1][2];
+deadline instanceof Date     // true
+
+// Сейчас
+const now = new Date();
+
+// Год, МЕСЯЦ С НУЛЯ, день, часы, минуты
+new Date(2026, 9, 19)        // 19 октября 2026!
+new Date(2026, 9, 19, 14, 30)
+
+// Из текста — только в формате ГГГГ-ММ-ДД
+new Date('2026-10-19')       // работает
+new Date('19.10.2026')       // Invalid Date</pre>
+        <div>
+          <p>Если в ячейке настоящая дата, <code>getValues</code> вернёт объект <code>Date</code>. Если дата набрана текстом — вернётся строка, и её надо разобрать (функция <code>parseDate</code> из модуля 2).</p>
+          <div class="note"><b>Месяцы в JavaScript считаются с нуля:</b> январь — 0, октябрь — 9, декабрь — 11. Дни — как обычно, с 1.</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <h2><span class="num">2</span>Считать с датами</h2>
+      <div class="cols">
+<pre class="code">const HOUR = 60 * 60 * 1000;   // мс в часе
+const DAY = 24 * HOUR;          // мс в дне
+
+// Сравнивать можно напрямую
+if (deadline &lt; now) { /* просрочен */ }
+
+// Разница — в миллисекундах
+const hoursLeft = (deadline - now) / HOUR;
+const daysLate = Math.floor((done - deadline) / DAY);
+
+// Прибавить время
+const in3days = new Date(now.getTime() + 3 * DAY);
+const in4hours = new Date(now.getTime() + 4 * HOUR);</pre>
+        <div>
+          <p>Внутри дата — это число миллисекунд. Поэтому даты можно сравнивать знаками <code>&lt;</code> и <code>&gt;</code> и вычитать друг из друга.</p>
+          <p>Результат вычитания делим на «миллисекунд в часе» или «в дне» — получаем часы или дни.</p>
+          <div class="note">Заведите константы <code>HOUR</code> и <code>DAY</code> — код станет читаться как текст: «3 * DAY».</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <h2><span class="num">3</span>Дата → красивый текст</h2>
+      <div class="cols">
+<pre class="code">const tz = SpreadsheetApp.getActive()
+  .getSpreadsheetTimeZone();
+
+Utilities.formatDate(now, tz, 'dd.MM.yyyy')
+// → 19.10.2026
+Utilities.formatDate(now, tz, 'dd.MM.yyyy HH:mm')
+// → 19.10.2026 14:30
+Utilities.formatDate(now, tz, 'MM.yyyy')
+// → 10.2026
+Utilities.formatDate(now, tz, 'yyyy-MM-dd')
+// → 2026-10-19</pre>
+        <table class="map">
+          <tr><th>Код</th><th>Что это</th></tr>
+          <tr><td><code>dd</code></td><td>день: 01–31</td></tr>
+          <tr><td><code>MM</code></td><td>месяц: 01–12</td></tr>
+          <tr><td><code>yyyy</code></td><td>год: 2026</td></tr>
+          <tr><td><code>HH</code></td><td>часы: 00–23</td></tr>
+          <tr><td><code>mm</code></td><td>минуты: 00–59</td></tr>
+        </table>
+      </div>
+      <div class="note"><b>MM — месяц, mm — минуты.</b> Перепутать их — самая частая ошибка в форматах дат.</div>
+    </section>
+
+    <section class="slide">
+      <h2><span class="num">4</span>Часовые пояса</h2>
+      <p class="lead">Команда работает в разных странах, поэтому «9 утра» у всех разное. Часовой пояс задан в трёх местах:</p>
+      <table class="map">
+        <tr><th>Где</th><th>На что влияет</th><th>Где поменять</th></tr>
+        <tr><td>Таблица</td><td>Как даты показываются в ячейках и когда наступает «сегодня» в формулах</td><td>Файл → Настройки → Часовой пояс</td></tr>
+        <tr><td>Проект скрипта</td><td>Когда срабатывают триггеры «каждый день в 9»</td><td>Редактор → Настройки проекта</td></tr>
+        <tr><td>formatDate</td><td>Как дата превращается в текст</td><td>Второй параметр: <code>tz</code></td></tr>
+      </table>
+      <div class="note">Правило: пусть все три совпадают. В <code>formatDate</code> передавайте <code>getSpreadsheetTimeZone()</code>, а не пишите пояс руками.</div>
+    </section>
+
+    <section class="slide">
+      <h2><span class="num">5</span>Строки: чистка и поиск</h2>
+      <div class="cols">
+<pre class="code">'  Ольга Л. '.trim()          // 'Ольга Л.'
+'ГОТОВ'.toLowerCase()         // 'готов'
+'ord-1001'.toUpperCase()      // 'ORD-1001'
+
+'Нужны доп. фото'.includes('фото')   // true
+'ORD-1001'.startsWith('ORD')         // true
+
+'Иванова Анна'.split(' ')     // ['Иванова', 'Анна']
+'3,5'.replace(',', '.')       // '3.5'
+'a-b-c'.replaceAll('-', '')   // 'abc'
+
+String(7).padStart(3, '0')    // '007' — для ID
+'Заказ'.length                // 5</pre>
+        <div>
+          <p>Методы строк не меняют исходный текст, а возвращают новый. Результат нужно сохранить: <code>name = name.trim()</code>.</p>
+          <p><code>replace</code> меняет только <b>первое</b> вхождение, <code>replaceAll</code> — все.</p>
+          <div class="note">Перед сравнением текстов чистите оба: <code>a.trim().toLowerCase() === b.trim().toLowerCase()</code>.</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <h2><span class="num">6</span>Частые ошибки</h2>
+      <div class="note err"><b>Отчёт за ноябрь вместо октября</b><br><code>new Date(2026, 10, 1)</code> — это 1 ноября: месяц считается с нуля.</div>
+      <div class="note err"><b>В названии листа «Отчёт 30.2026»</b><br>В формате написали <code>mm</code> (минуты) вместо <code>MM</code> (месяц).</div>
+      <div class="note err"><b>Даты в письме сдвинуты на несколько часов</b><br>В <code>formatDate</code> указан не тот часовой пояс, или пояс проекта не совпадает с поясом таблицы.</div>
+      <div class="note err"><b>deadline &lt; now всегда false</b><br>В ячейке дата набрана текстом, и сравнивается строка с датой. Проверьте: <code>deadline instanceof Date</code>.</div>
+    </section>
+
+    <section class="slide">
+      <h2><span class="num">7</span>Почитать подробнее</h2>
+      <ul>
+        <li><a href="https://learn.javascript.ru/date">Современный учебник JavaScript: Дата и время</a></li>
+        <li><a href="https://learn.javascript.ru/string">Современный учебник JavaScript: Строки</a></li>
+        <li><a href="https://developers.google.com/apps-script/reference/utilities/utilities">Справочник Utilities</a> — formatDate и другие помощники (на английском)</li>
+      </ul>
+      <p><b>Назад:</b> <a href="sh6-objects.html">Ш6. Объекты-словари</a> · <b>На главную:</b> <a href="../index.html">все материалы</a></p>
+    </section>
+
+  </main>
+
+  <nav class="controls">
+    <button type="button" data-prev>← Назад</button>
+    <span class="count" data-count></span>
+    <button type="button" data-next>Дальше →</button>
+  </nav>
+</div>
+<script src="../assets/slides.js"></script>
+</body>
+</html>
