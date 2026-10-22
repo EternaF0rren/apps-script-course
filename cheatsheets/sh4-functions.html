@@ -28,7 +28,7 @@
       <div class="cols">
 <pre class="code">// Объявляем
 function sayHello() {
-  SpreadsheetApp.getActive().toast('Привет!');
+  SpreadsheetApp.getActive().toast('Hello!');
 }
 
 // Вызываем из другой функции — со скобками
@@ -38,7 +38,7 @@ function main() {
         <div>
           <p><code>function имя() { … }</code> — объявление. Код внутри не выполняется, пока функцию не вызовут.</p>
           <p><code>имя()</code> — вызов. Скобки обязательны: без них функция не запустится.</p>
-          <div class="note">Из меню и кнопок функцию назначают по имени <b>без скобок</b>: <code>addItem('Привет', 'sayHello')</code>.</div>
+          <div class="note">Из меню и кнопок функцию назначают по имени <b>без скобок</b>: <code>addItem('Hello', 'sayHello')</code>.</div>
         </div>
       </div>
     </section>
@@ -50,11 +50,11 @@ function main() {
 function hoursToText(hours) {
   const h = Math.floor(hours);
   const m = Math.round((hours - h) * 60);
-  return h + ' ч ' + m + ' мин';
+  return h + ' h ' + m + ' min';
 }
 
-hoursToText(2.25)   // '2 ч 15 мин'
-hoursToText(0.5)    // '0 ч 30 мин'
+hoursToText(2.25)   // '2 h 15 min'
+hoursToText(0.5)    // '0 h 30 min'
 
 // Несколько параметров — через запятую
 function isLate(deadline, done) {
@@ -85,11 +85,11 @@ function isLate(deadline, done) {
       <div class="cols">
 <pre class="code">// Обычная запись
 const open = values.filter(function (row) {
-  return row[4] !== 'Готов';
+  return row[4] !== 'Done';
 });
 
 // Стрелочная — то же самое
-const open2 = values.filter(r => r[4] !== 'Готов');
+const open2 = values.filter(r => r[4] !== 'Done');
 
 // Стрелочная с несколькими строками
 const ids = values.map(row => {
@@ -107,7 +107,7 @@ const ids = values.map(row => {
     <section class="slide">
       <h2><span class="num">5</span>Что видно внутри и снаружи</h2>
       <div class="cols">
-<pre class="code">const SHEET = 'Заказы';  // видна всем функциям
+<pre class="code">const SHEET = 'Orders';  // видна всем функциям
 
 function countOrders() {
   const sheet = getSheet(SHEET); // только здесь

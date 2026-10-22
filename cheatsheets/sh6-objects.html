@@ -28,18 +28,18 @@
       <div class="cols">
 <pre class="code">const order = {
   id: 'ORD-1001',
-  status: 'В работе',
+  status: 'In Progress',
   hours: 3.5,
 };
 
-order.status          // 'В работе'
+order.status          // 'In Progress'
 order['hours']        // 3.5 — то же через скобки
-order.status = 'Готов';   // поменять
+order.status = 'Done';   // поменять
 order.qc = 5;             // добавить новое поле
 
 // Ключ с пробелом или русский — только в скобках
 const counts = {};
-counts['В работе'] = 11;</pre>
+counts['In Progress'] = 11;</pre>
         <div>
           <p>В фигурных скобках — пары <b>ключ: значение</b> через запятую.</p>
           <p>Читать и писать можно через точку <code>order.status</code> или через скобки <code>order['status']</code>. Скобки нужны, когда ключ лежит в переменной или в нём есть пробелы.</p>
@@ -58,7 +58,7 @@ rows.forEach(row => {
   counts[status] = (counts[status] || 0) + 1;
 });
 
-// { 'Готов': 170, 'В работе': 11, ... }</pre>
+// { 'Done': 170, 'In Progress': 11, ... }</pre>
         <div>
           <p>Главный шаблон модуля 6. Читается так: «возьми, сколько уже насчитано по этому статусу (или 0, если полки ещё нет), прибавь 1 и положи обратно».</p>
           <p><code>|| 0</code> нужен потому, что в первый раз полки нет и там <code>undefined</code>.</p>
@@ -82,8 +82,8 @@ rows.forEach(row => {
 });
 
 // {
-//   'Ольга Л.': { orders: 7, hours: 31.5 },
-//   'Глеб Г.':  { orders: 5, hours: 22.0 },
+//   'Olga L.': { orders: 7, hours: 31.5 },
+//   'Gleb G.':  { orders: 5, hours: 22.0 },
 // }</pre>
         <div>
           <p>На полке может лежать не число, а целая карточка с несколькими счётчиками.</p>
@@ -97,10 +97,10 @@ rows.forEach(row => {
       <h2><span class="num">4</span>Из словаря — в таблицу</h2>
       <div class="cols">
 <pre class="code">Object.keys(counts)
-// ['Готов', 'В работе', 'Проблема', ...]
+// ['Done', 'In Progress', 'Problem', ...]
 
 Object.entries(counts)
-// [['Готов', 170], ['В работе', 11], ...]
+// [['Done', 170], ['In Progress', 11], ...]
 
 // Сразу готово для setValues!
 const rows = Object.entries(counts);
@@ -131,7 +131,7 @@ employees['D-004']       // вся строка сотрудника
 employees['D-004'][5]    // его супервайзер
 
 // Есть ли такой ID?
-if (!employees[id]) console.log('Нет ID: ' + id);
+if (!employees[id]) console.log('No ID: ' + id);
 
 // Только уникальные значения — Set
 const ids = new Set(rows.map(r => r[5]));
@@ -148,7 +148,7 @@ ids.size           // сколько разных</pre>
       <h2><span class="num">6</span>Частые ошибки</h2>
       <div class="note err"><b>Вместо числа получилось NaN</b><br>Прибавили к полке, которой ещё нет: <code>undefined + 1</code>. Нужно <code>(counts[k] || 0) + 1</code> или проверка <code>if (!obj[k])</code>.</div>
       <div class="note err"><b>Cannot read properties of undefined (reading 'orders')</b><br>Обратились к полю карточки, которую не создали: <code>byWorker[name].orders++</code> без предварительного <code>byWorker[name] = {…}</code>.</div>
-      <div class="note err"><b>«Готов» и «готов» посчитались отдельно</b><br>Ключи различают регистр и пробелы. Перед подсчётом чистите значения: <code>trim()</code>, единый регистр.</div>
+      <div class="note err"><b>«Done» и «done» посчитались отдельно</b><br>Ключи различают регистр и пробелы. Перед подсчётом чистите значения: <code>trim()</code>, единый регистр.</div>
       <div class="note err"><b>В журнале видно [object Object]</b><br>Склеили объект с текстом. Печатайте отдельно: <code>console.log(obj)</code> или <code>JSON.stringify(obj)</code>.</div>
     </section>
 

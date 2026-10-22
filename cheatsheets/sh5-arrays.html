@@ -26,14 +26,14 @@
     <section class="slide">
       <h2><span class="num">1</span>Список в квадратных скобках</h2>
       <div class="cols">
-<pre class="code">const statuses = ['Новый', 'В работе', 'Готов'];
+<pre class="code">const statuses = ['New', 'In Progress', 'Done'];
 
-statuses[0]        // 'Новый' — счёт с нуля!
-statuses[2]        // 'Готов'
+statuses[0]        // 'New' — счёт с нуля!
+statuses[2]        // 'Done'
 statuses.length    // 3 — сколько элементов
-statuses.at(-1)    // 'Готов' — последний
+statuses.at(-1)    // 'Done' — последний
 
-statuses.push('Проблема');   // добавить в конец
+statuses.push('Problem');   // добавить в конец
 statuses.length    // 4</pre>
         <div>
           <p>Элементы считаются <b>с нуля</b>: первый — <code>[0]</code>, второй — <code>[1]</code>.</p>
@@ -48,7 +48,7 @@ statuses.length    // 4</pre>
       <div class="cols">
 <pre class="code">const values = sheet.getRange('A1:C3').getValues();
 // [
-//   ['ID',       'Создан', 'Дедлайн'],  ← [0]
+//   ['ID',       'Created', 'Deadline'],  ← [0]
 //   ['ORD-1001', дата,     дата],       ← [1]
 //   ['ORD-1002', дата,     дата],       ← [2]
 // ]
@@ -96,10 +96,10 @@ sheet.getRange('P2:P4')
         <tr><th>Метод</th><th>Что делает</th><th>Пример</th></tr>
         <tr><td><code>forEach</code></td><td>Сделать что-то для каждого элемента</td><td><code>rows.forEach(r =&gt; console.log(r[0]))</code></td></tr>
         <tr><td><code>map</code></td><td>Превратить каждый элемент в новый</td><td><code>rows.map(r =&gt; r[0])</code> — список ID</td></tr>
-        <tr><td><code>filter</code></td><td>Оставить подходящие</td><td><code>rows.filter(r =&gt; r[4] === 'Проблема')</code></td></tr>
+        <tr><td><code>filter</code></td><td>Оставить подходящие</td><td><code>rows.filter(r =&gt; r[4] === 'Problem')</code></td></tr>
         <tr><td><code>find</code></td><td>Найти первый подходящий</td><td><code>rows.find(r =&gt; r[0] === 'ORD-1001')</code></td></tr>
         <tr><td><code>some</code></td><td>Есть ли хоть один подходящий</td><td><code>rows.some(r =&gt; r[8] &gt; 24)</code> → true/false</td></tr>
-        <tr><td><code>includes</code></td><td>Есть ли значение в списке</td><td><code>['Готов','Проблема'].includes(status)</code></td></tr>
+        <tr><td><code>includes</code></td><td>Есть ли значение в списке</td><td><code>['Done','Problem'].includes(status)</code></td></tr>
       </table>
       <div class="note">Методы можно соединять цепочкой: <code>rows.filter(…).map(…)</code> — «отбери, потом преврати».</div>
     </section>
@@ -132,7 +132,7 @@ rows.sort((a, b) => b[8] - a[8]);</pre>
     <section class="slide">
       <h2><span class="num">6</span>Частые ошибки</h2>
       <div class="note err"><b>The parameters (number[]) don't match the method signature for SpreadsheetApp.Range.setValues</b><br>В <code>setValues</code> передали плоский список. Заверните каждый элемент: <code>list.map(x =&gt; [x])</code>.</div>
-      <div class="note err"><b>Сравнение values[i] === 'Готов' всегда false</b><br>Сравнили целую строку с текстом. Нужна ячейка: <code>values[i][4] === 'Готов'</code>.</div>
+      <div class="note err"><b>Сравнение values[i] === 'Done' всегда false</b><br>Сравнили целую строку с текстом. Нужна ячейка: <code>values[i][4] === 'Done'</code>.</div>
       <div class="note err"><b>Числа отсортировались странно: 10, 100, 9</b><br>Забыли функцию сравнения в <code>sort</code>.</div>
       <div class="note err"><b>Шапка попала в расчёт</b><br>Забыли <code>slice(1)</code>, и строка с названиями колонок посчиталась как данные.</div>
     </section>

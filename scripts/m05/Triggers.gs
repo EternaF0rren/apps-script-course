@@ -15,7 +15,7 @@ function createMorningDigestTrigger() {
     .everyDays(1)
     .atHour(9)
     .create();
-  SpreadsheetApp.getActive().toast('Сводка будет приходить каждый день около 9:00', 'Триггер создан', 5);
+  SpreadsheetApp.getActive().toast('The digest will arrive every day around 9:00', 'Trigger created', 5);
 }
 
 /** Раз в неделю, в понедельник утром, переносить закрытые заказы в архив (Archive.gs). */
@@ -26,12 +26,12 @@ function createWeeklyArchiveTrigger() {
     .onWeekDay(ScriptApp.WeekDay.MONDAY)
     .atHour(7)
     .create();
-  SpreadsheetApp.getActive().toast('Архив будет обновляться по понедельникам около 7:00', 'Триггер создан', 5);
+  SpreadsheetApp.getActive().toast('The archive will update on Mondays around 7:00', 'Trigger created', 5);
 }
 
 /**
  * Устанавливаемый триггер «при правке». Нужен там, где простой onEdit не справится:
- * например, отправить сообщение в Slack, когда статус стал «Проблема» (Notify.gs).
+ * например, отправить сообщение в Slack, когда статус стал «Problem» (Notify.gs).
  */
 function createProblemAlertTrigger() {
   removeTriggersFor_('onProblemStatus');
@@ -39,7 +39,7 @@ function createProblemAlertTrigger() {
     .forSpreadsheet(SpreadsheetApp.getActive())
     .onEdit()
     .create();
-  SpreadsheetApp.getActive().toast('Статус «Проблема» будет уходить в Slack', 'Триггер создан', 5);
+  SpreadsheetApp.getActive().toast('Problem status will be posted to Slack', 'Trigger created', 5);
 }
 
 /** Показать в журнале все триггеры проекта: какая функция и по какому событию. */
@@ -52,7 +52,7 @@ function listTriggers() {
 /** Удалить все триггеры этого проекта, созданные вами. Полезно перед отпуском. */
 function deleteAllMyTriggers() {
   ScriptApp.getProjectTriggers().forEach(function (t) { ScriptApp.deleteTrigger(t); });
-  SpreadsheetApp.getActive().toast('Все триггеры удалены', 'Готово', 3);
+  SpreadsheetApp.getActive().toast('All triggers deleted', 'Done', 3);
 }
 
 /** Служебная: удалить триггеры, которые запускают функцию с этим именем. */

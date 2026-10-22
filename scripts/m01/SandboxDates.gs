@@ -7,8 +7,19 @@
  */
 function refreshSandboxDates() {
   const ss = SpreadsheetApp.getActive();
-  const orders = ss.getSheetByName('Заказы');
-  const hours = ss.getSheetByName('Часы');
+
+  // Ячейки показывают время в часовом поясе ТАБЛИЦЫ (Файл → Настройки),
+  // а это отдельная настройка от часового пояса проекта скриптов.
+  // У таблицы, созданной из xlsx, по умолчанию стоит GMT — тогда время в ячейках
+  // будет сдвинуто на несколько часов. Поэтому сначала сверяем два пояса.
+  const sheetZone = ss.getSpreadsheetTimeZone();
+  const scriptZone = Session.getScriptTimeZone();
+  if (sheetZone !== scriptZone) {
+    throw new Error('Time zones differ: spreadsheet — ' + sheetZone + ', script project — ' + scriptZone +
+      '. Set the same time zone in File → Settings and in Project Settings, then run again.');
+  }
+  const orders = ss.getSheetByName('Orders');
+  const hours = ss.getSheetByName('Hours');
 
   const data = orders.getRange(2, 1, orders.getLastRow() - 1, orders.getLastColumn()).getValues();
 
@@ -17,14 +28,14 @@ function refreshSandboxDates() {
   data.forEach(function (row) {
     if (row[1] instanceof Date && row[1].getTime() > latest) latest = row[1].getTime();
   });
-  if (!latest) throw new Error('В колонке «Создан» нет дат');
+  if (!latest) throw new Error('No dates in the Created column');
 
   const shiftMs = (Date.now() - 60 * 60 * 1000) - latest;
   const shift = function (value) {
     return value instanceof Date ? new Date(value.getTime() + shiftMs) : value;
   };
 
-  // Колонки B (Создан), C (Дедлайн), K (Сдан) → индексы 1, 2, 10
+  // Колонки B (Created), C (Deadline), K (Delivered) → индексы 1, 2, 10
   const shifted = data.map(function (row) {
     return [shift(row[1]), shift(row[2])];
   });
@@ -34,7 +45,7 @@ function refreshSandboxDates() {
   orders.getRange(2, 2, shifted.length, 2).setValues(shifted);
   orders.getRange(2, 11, shiftedDone.length, 1).setValues(shiftedDone);
 
-  // Лист «Часы»: недели сдвигаем на целое число недель, чтобы понедельники остались понедельниками
+  // Лист «Hours»: недели сдвигаем на целое число недель, чтобы понедельники остались понедельниками
   const weekMs = 7 * 24 * 60 * 60 * 1000;
   const weekShift = Math.round(shiftMs / weekMs) * weekMs;
   const weeks = hours.getRange(2, 1, hours.getLastRow() - 1, 1).getValues().map(function (row) {
@@ -42,5 +53,5 @@ function refreshSandboxDates() {
   });
   hours.getRange(2, 1, weeks.length, 1).setValues(weeks);
 
-  ss.toast('Даты сдвинуты на ' + Math.round(shiftMs / 86400000) + ' дн.', 'Песочница', 5);
+  ss.toast('Dates shifted by ' + Math.round(shiftMs / 86400000) + ' days', 'Sandbox', 5);
 }

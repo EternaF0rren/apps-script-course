@@ -29,7 +29,7 @@
         <div class="nest">
           <div class="box"><b>SpreadsheetApp</b><span>вход: всё про Таблицы</span>
             <div class="box"><b>Spreadsheet</b><span>файл таблицы</span>
-              <div class="box"><b>Sheet</b><span>лист «Заказы»</span>
+              <div class="box"><b>Sheet</b><span>лист «Orders»</span>
                 <div class="box hl"><b>Range</b><span>диапазон A2:L201</span>
                   <div class="box"><b>values</b><span>сами значения</span></div>
                 </div>
@@ -39,7 +39,7 @@
         </div>
         <div>
 <pre class="code">const ss = SpreadsheetApp.getActive();
-const sheet = ss.getSheetByName('Заказы');
+const sheet = ss.getSheetByName('Orders');
 const range = sheet.getRange('A2:L201');
 const values = range.getValues();</pre>
           <p>Каждый шаг — «открыть следующую матрёшку». Почти любой скрипт для Таблиц начинается с этих строк.</p>
@@ -53,10 +53,10 @@ const values = range.getValues();</pre>
       <table class="map">
         <tr><th>Команда</th><th>Что делает</th></tr>
         <tr><td><code>SpreadsheetApp.getActive()</code></td><td>Таблица, к которой привязан скрипт</td></tr>
-        <tr><td><code>ss.getSheetByName('Заказы')</code></td><td>Лист по имени. Если листа нет — вернёт <code>null</code></td></tr>
+        <tr><td><code>ss.getSheetByName('Orders')</code></td><td>Лист по имени. Если листа нет — вернёт <code>null</code></td></tr>
         <tr><td><code>ss.getActiveSheet()</code></td><td>Лист, который сейчас открыт у пользователя</td></tr>
         <tr><td><code>ss.getSheets()</code></td><td>Список всех листов, чтобы пройти по каждому</td></tr>
-        <tr><td><code>ss.insertSheet('Октябрь')</code></td><td>Создать новый лист</td></tr>
+        <tr><td><code>ss.insertSheet('October')</code></td><td>Создать новый лист</td></tr>
         <tr><td><code>SpreadsheetApp.openById('ID')</code></td><td>Открыть другую таблицу по ID из её ссылки (модуль 6)</td></tr>
       </table>
       <div class="note">ID таблицы — длинный кусок ссылки между <code>/d/</code> и <code>/edit</code>.</div>
@@ -91,7 +91,7 @@ sheet.getRange(2, 1,
       <div class="cols">
 <pre class="code">// Одна ячейка
 const status = sheet.getRange('E2').getValue();
-sheet.getRange('E2').setValue('Готов');
+sheet.getRange('E2').setValue('Done');
 
 // Много ячеек: двумерный массив [строка][колонка]
 const values = sheet.getDataRange().getValues();
@@ -102,7 +102,7 @@ values[1][4]   // E2
 sheet.getRange(2, 1, rows.length, 5).setValues(rows);
 
 // Добавить строку в конец
-sheet.appendRow(['ORD-10201', new Date(), 'Новый']);</pre>
+sheet.appendRow(['ORD-10201', new Date(), 'New']);</pre>
         <div>
           <p><code>getValue</code> / <code>setValue</code> — для одной ячейки.</p>
           <p><code>getValues</code> / <code>setValues</code> — для диапазона. В сотни раз быстрее, чем ходить по ячейкам по одной.</p>
@@ -131,13 +131,13 @@ sheet.appendRow(['ORD-10201', new Date(), 'Новый']);</pre>
       <h2><span class="num">6</span>Сказать пользователю</h2>
       <div class="cols">
 <pre class="code">// Всплывающее сообщение в углу таблицы
-SpreadsheetApp.getActive().toast('Готово!', 'Скрипт', 5);
+SpreadsheetApp.getActive().toast('Done!', 'Script', 5);
 
 // Окно с кнопкой ОК (только при запуске из таблицы)
-SpreadsheetApp.getUi().alert('Найдено 12 просрочек');
+SpreadsheetApp.getUi().alert('Found 12 overdue orders');
 
 // Сообщение в журнал выполнения (видит только автор)
-console.log('Строк обработано: ' + rows.length);</pre>
+console.log('Rows processed: ' + rows.length);</pre>
         <div>
           <p><code>toast</code> — ненавязчиво: появилось и исчезло через 5 секунд.</p>
           <p><code>alert</code> — требует нажать ОК. Подходит для важного: «Удалить 40 строк?» (подробнее — в модуле 3).</p>

@@ -1,7 +1,7 @@
 /**
  * Модуль 5, урок 3. Архив закрытых заказов.
  *
- * Переносит на лист «Архив» заказы со статусом «Готов», сданные больше
+ * Переносит на лист «Archive» заказы со статусом «Done», сданные больше
  * ARCHIVE_AFTER_DAYS дней назад. Рабочий лист остаётся коротким и быстрым.
  * Запуск: вручную из меню или раз в неделю триггером (Triggers.gs).
  */
@@ -11,8 +11,8 @@ const ORDER_COLUMNS = 12; // A–L: колонки заказа, которые 
 
 function archiveDoneOrders() {
   const ss = SpreadsheetApp.getActive();
-  const orders = ss.getSheetByName('Заказы');
-  const archive = ss.getSheetByName('Архив');
+  const orders = ss.getSheetByName('Orders');
+  const archive = ss.getSheetByName('Archive');
 
   const values = orders.getRange(2, 1, orders.getLastRow() - 1, ORDER_COLUMNS).getValues();
   const border = new Date(Date.now() - ARCHIVE_AFTER_DAYS * 24 * 60 * 60 * 1000);
@@ -23,13 +23,13 @@ function archiveDoneOrders() {
   values.forEach(function (row, i) {
     const status = row[4];
     const done = row[10];
-    if (status === 'Готов' && done instanceof Date && done < border) {
-      toMove.push({ sheetRow: i + 2, data: row.concat([now]) }); // + «Дата архивации»
+    if (status === 'Done' && done instanceof Date && done < border) {
+      toMove.push({ sheetRow: i + 2, data: row.concat([now]) }); // + «Archived At»
     }
   });
 
   if (toMove.length === 0) {
-    console.log('Нечего архивировать');
+    console.log('Nothing to archive');
     return;
   }
 
@@ -38,10 +38,10 @@ function archiveDoneOrders() {
   archive.getRange(archive.getLastRow() + 1, 1, archiveRows.length, archiveRows[0].length)
     .setValues(archiveRows);
 
-  // 2. Удаляем из «Заказов» снизу вверх, чтобы номера строк не съезжали
+  // 2. Удаляем из «Orders» снизу вверх, чтобы номера строк не съезжали
   toMove.slice().reverse().forEach(function (item) {
     orders.deleteRow(item.sheetRow);
   });
 
-  console.log('В архив перенесено: ' + toMove.length);
+  console.log('Moved to archive: ' + toMove.length);
 }

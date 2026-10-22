@@ -3,14 +3,14 @@
  *
  * Считаем по каждому исполнителю: сколько заказов, сколько часов, сколько
  * просрочек. Это то, что делает сводная таблица, — только с любыми правилами.
- * Результат — на лист «Сводка». В модуле 8 к нему добавятся графики.
+ * Результат — на лист «Summary». В модуле 8 к нему добавятся графики.
  */
 function summarizeByWorker() {
   const ss = SpreadsheetApp.getActive();
-  const values = ss.getSheetByName('Заказы').getDataRange().getValues().slice(1);
+  const values = ss.getSheetByName('Orders').getDataRange().getValues().slice(1);
   const now = new Date();
 
-  // Словарь: { 'Ольга Л.': { orders: 7, hours: 31.5, late: 1 }, ... }
+  // Словарь: { 'Olga L.': { orders: 7, hours: 31.5, late: 1 }, ... }
   const byWorker = {};
   values.forEach(function (row) {
     const name = row[6];
@@ -30,9 +30,9 @@ function summarizeByWorker() {
     return [name, s.orders, Math.round(s.hours * 10) / 10, s.late, s.late / s.orders];
   });
 
-  const out = ss.getSheetByName('Сводка');
+  const out = ss.getSheetByName('Summary');
   out.clearContents();
-  out.getRange(1, 1, 1, 5).setValues([['Исполнитель', 'Заказов', 'Часов', 'Просрочек', 'Доля просрочек']])
+  out.getRange(1, 1, 1, 5).setValues([['Assignee', 'Orders', 'Hours', 'Overdue', 'Overdue Share']])
     .setFontWeight('bold');
   out.getRange(2, 1, rows.length, 5).setValues(rows);
   out.getRange(2, 5, rows.length, 1).setNumberFormat('0%');
@@ -40,8 +40,8 @@ function summarizeByWorker() {
 
 /** Короче: сколько заказов в каждом статусе. */
 function countByStatus() {
-  const values = SpreadsheetApp.getActive().getSheetByName('Заказы').getDataRange().getValues().slice(1);
+  const values = SpreadsheetApp.getActive().getSheetByName('Orders').getDataRange().getValues().slice(1);
   const counts = {};
   values.forEach(function (row) { counts[row[4]] = (counts[row[4]] || 0) + 1; });
-  console.log(counts); // { 'Готов': 170, 'В работе': 11, ... }
+  console.log(counts); // { 'Done': 170, 'In Progress': 11, ... }
 }

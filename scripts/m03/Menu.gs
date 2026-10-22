@@ -10,26 +10,26 @@
  */
 function onOpen() {
   SpreadsheetApp.getUi()
-    .createMenu('🛠 Курс')
-    .addItem('Оформить лист «Заказы»', 'formatOrdersSheet')
-    .addItem('Привести выгрузку в порядок', 'tidyExport')
+    .createMenu('🛠 Course')
+    .addItem('Format the Orders sheet', 'formatOrdersSheet')
+    .addItem('Tidy up the export', 'tidyExport')
     .addSeparator()
-    .addItem('Сколько открытых заказов у исполнителя?', 'askOpenOrdersByWorker')
-    .addItem('Форма «Добавить заказ»', 'showAddOrderSidebar')
+    .addItem('Open orders per assignee', 'askOpenOrdersByWorker')
+    .addItem('Add order form', 'showAddOrderSidebar')
     .addSeparator()
-    .addSubMenu(SpreadsheetApp.getUi().createMenu('Песочница')
-      .addItem('Обновить даты', 'refreshSandboxDates')
-      .addItem('Добавить колонку с флажками «Закрыть»', 'addCloseCheckboxes'))
-    .addItem('Что умеет это меню', 'showMenuHelp')
+    .addSubMenu(SpreadsheetApp.getUi().createMenu('Sandbox')
+      .addItem('Refresh dates', 'refreshSandboxDates')
+      .addItem('Add Close checkboxes', 'addCloseCheckboxes'))
+    .addItem('What this menu does', 'showMenuHelp')
     .addToUi();
 }
 
 function showMenuHelp() {
   SpreadsheetApp.getUi().alert(
-    'Меню «Курс»',
-    'Оформить — шапка, форматы, подсветка просрочек.\n' +
-    'Привести выгрузку в порядок — пробелы, регистр, дубли, даты.\n' +
-    'Сколько открытых заказов — спросит ID исполнителя и посчитает.\n' +
-    'Форма — добавить заказ без ручного ввода в таблицу.',
+    'Course menu',
+    'Format — header, number formats, overdue highlighting.\n' +
+    'Tidy up the export — spaces, case, duplicates, dates.\n' +
+    'Open orders — asks for an assignee ID and counts.\n' +
+    'Form — add an order without typing into the sheet.',
     SpreadsheetApp.getUi().ButtonSet.OK);
 }

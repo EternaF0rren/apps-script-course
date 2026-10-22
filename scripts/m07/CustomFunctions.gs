@@ -4,7 +4,7 @@
  * Функцию из этого файла можно писать прямо в ячейке, как СУММ:
  *   =HOURS_TEXT(I2)            → «4 ч 36 мин»
  *   =HOURS_TEXT(I2:I201)       → вся колонка одной формулой
- *   =ORDER_STATUS(C2; K2; E2)  → «Сдан вовремя»
+ *   =ORDER_STATUS(C2; K2; E2)  → «On time»
  *
  * Имена латиницей и заглавными: так их легко отличить от встроенных формул,
  * и они одинаково работают при любом языке таблицы.
@@ -12,10 +12,10 @@
  */
 
 /**
- * Переводит часы из числа в текст: 2.25 → «2 ч 15 мин».
+ * Переводит часы из числа в текст: 2.25 → «2 h 15 min».
  *
  * @param {number} hours Часы числом или диапазон с часами, например I2:I201.
- * @return Текст вида «2 ч 15 мин».
+ * @return Текст вида «2 h 15 min».
  * @customfunction
  */
 function HOURS_TEXT(hours) {
@@ -26,14 +26,14 @@ function HOURS_TEXT(hours) {
     });
   }
   if (hours === '' || hours === null) return '';
-  if (typeof hours !== 'number') throw new Error('HOURS_TEXT: нужно число часов, а пришло «' + hours + '»');
+  if (typeof hours !== 'number') throw new Error('HOURS_TEXT: expected a number of hours, got "' + hours + '"');
 
   const totalMinutes = Math.round(hours * 60);
   const h = Math.floor(totalMinutes / 60);
   const m = totalMinutes % 60;
-  if (h === 0) return m + ' мин';
-  if (m === 0) return h + ' ч';
-  return h + ' ч ' + m + ' мин';
+  if (h === 0) return m + ' min';
+  if (m === 0) return h + ' h';
+  return h + ' h ' + m + ' min';
 }
 
 /**
@@ -59,8 +59,8 @@ function EXTRACT_ORDER_ID(text) {
  * @param {Date} deadline Дедлайн (колонка C) или диапазон дедлайнов.
  * @param {Date} done Дата сдачи (колонка K) или диапазон того же размера.
  * @param {string} status Статус (колонка E) или диапазон того же размера.
- * @param {number} hotHours Необязательно: за сколько часов до дедлайна заказ «горит». По умолчанию 4.
- * @return «Сдан вовремя», «Сдан с опозданием», «Просрочен», «Горит» или «В срок».
+ * @param {number} hotHours Необязательно: за сколько часов до дедлайна заказ «Urgent». По умолчанию 4.
+ * @return «On time», «Late», «Overdue», «Urgent» or «On track».
  * @customfunction
  */
 function ORDER_STATUS(deadline, done, status, hotHours) {
@@ -74,11 +74,11 @@ function ORDER_STATUS(deadline, done, status, hotHours) {
   const limit = (typeof hotHours === 'number' ? hotHours : 4) * 60 * 60 * 1000;
   const now = new Date();
 
-  if (done instanceof Date) return done <= deadline ? 'Сдан вовремя' : 'Сдан с опозданием';
-  if (status === 'Готов') return 'Сдан вовремя';
-  if (deadline < now) return 'Просрочен';
-  if (deadline - now <= limit) return 'Горит';
-  return 'В срок';
+  if (done instanceof Date) return done <= deadline ? 'On time' : 'Late';
+  if (status === 'Done') return 'On time';
+  if (deadline < now) return 'Overdue';
+  if (deadline - now <= limit) return 'Urgent';
+  return 'On track';
 }
 
 /**
@@ -87,8 +87,8 @@ function ORDER_STATUS(deadline, done, status, hotHours) {
  *
  * @param {Date} start Дата начала (включительно).
  * @param {Date} end Дата конца (включительно).
- * @param {string} country Страна так же, как она записана в списке праздников, например «Грузия».
- * @param {Array} holidays Диапазон с праздниками, например Праздники!A2:B.
+ * @param {string} country Страна так же, как она записана в списке праздников, например «Georgia».
+ * @param {Array} holidays Диапазон с праздниками, например Holidays!A2:B.
  * @return Количество рабочих дней.
  * @customfunction
  */
@@ -120,34 +120,34 @@ function dayKey_(date) {
 }
 
 /**
- * Запустите один раз: создаёт лист «Праздники» с примером.
+ * Запустите один раз: создаёт лист «Holidays» с примером.
  * Даты — только для тренировки. Для работы заполните лист по официальному
  * календарю своей страны: переносы выходных и плавающие праздники
  * (например, Пасху) нужно добавить самим.
  */
 function createHolidaysSheet() {
   const ss = SpreadsheetApp.getActive();
-  const sheet = ss.getSheetByName('Праздники') || ss.insertSheet('Праздники');
+  const sheet = ss.getSheetByName('Holidays') || ss.insertSheet('Holidays');
   const rows = [
-    ['Страна', 'Дата', 'Праздник'],
-    ['Грузия', new Date(2026, 9, 14), 'Светицховлоба'],
-    ['Грузия', new Date(2026, 10, 23), 'Гиоргоба'],
-    ['Грузия', new Date(2027, 0, 1), 'Новый год'],
-    ['Грузия', new Date(2027, 0, 2), 'Новый год'],
-    ['Грузия', new Date(2027, 0, 7), 'Рождество'],
-    ['Польша', new Date(2026, 10, 11), 'День независимости'],
-    ['Польша', new Date(2026, 11, 24), 'Сочельник'],
-    ['Польша', new Date(2026, 11, 25), 'Рождество'],
-    ['Польша', new Date(2027, 0, 1), 'Новый год'],
-    ['Польша', new Date(2027, 0, 6), 'Богоявление'],
-    ['Сербия', new Date(2026, 10, 11), 'День перемирия'],
-    ['Сербия', new Date(2027, 0, 1), 'Новый год'],
-    ['Сербия', new Date(2027, 0, 2), 'Новый год'],
-    ['Сербия', new Date(2027, 0, 7), 'Рождество'],
+    ['Country', 'Date', 'Holiday'],
+    ['Georgia', new Date(2026, 9, 14), 'Svetitskhovloba'],
+    ['Georgia', new Date(2026, 10, 23), 'Giorgoba'],
+    ['Georgia', new Date(2027, 0, 1), 'New Year'],
+    ['Georgia', new Date(2027, 0, 2), 'New Year'],
+    ['Georgia', new Date(2027, 0, 7), 'Christmas'],
+    ['Poland', new Date(2026, 10, 11), 'Independence Day'],
+    ['Poland', new Date(2026, 11, 24), 'Christmas Eve'],
+    ['Poland', new Date(2026, 11, 25), 'Christmas'],
+    ['Poland', new Date(2027, 0, 1), 'New Year'],
+    ['Poland', new Date(2027, 0, 6), 'Epiphany'],
+    ['Serbia', new Date(2026, 10, 11), 'Armistice Day'],
+    ['Serbia', new Date(2027, 0, 1), 'New Year'],
+    ['Serbia', new Date(2027, 0, 2), 'New Year'],
+    ['Serbia', new Date(2027, 0, 7), 'Christmas'],
   ];
   sheet.clearContents();
   sheet.getRange(1, 1, rows.length, 3).setValues(rows);
   sheet.getRange(1, 1, 1, 3).setFontWeight('bold');
   sheet.getRange(2, 2, rows.length - 1, 1).setNumberFormat('dd.mm.yyyy');
-  ss.toast('Лист «Праздники» готов. Это пример — сверьте даты с официальным календарём.');
+  ss.toast('Holidays sheet is ready. This is a sample — check the dates against the official calendar.');
 }

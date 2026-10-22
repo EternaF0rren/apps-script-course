@@ -7,16 +7,16 @@
 
 // Имена листов песочницы
 const SHEETS = {
-  ORDERS: 'Заказы',
-  EMPLOYEES: 'Сотрудники',
-  HOURS: 'Часы',
-  EXPORT: 'Выгрузка',
-  ARCHIVE: 'Архив',
-  SUMMARY: 'Сводка',
-  SETTINGS: 'Настройки',
+  ORDERS: 'Orders',
+  EMPLOYEES: 'Employees',
+  HOURS: 'Hours',
+  EXPORT: 'Export',
+  ARCHIVE: 'Archive',
+  SUMMARY: 'Summary',
+  SETTINGS: 'Settings',
 };
 
-// Номера колонок листа «Заказы» (считаем с 1, как в таблице)
+// Номера колонок листа «Orders» (считаем с 1, как в таблице)
 const ORDER_COLS = {
   ID: 1,
   CREATED: 2,
@@ -39,15 +39,15 @@ const ORDER_COLS = {
 function getSheet(name) {
   const sheet = SpreadsheetApp.getActive().getSheetByName(name);
   if (!sheet) {
-    throw new Error('Не найден лист «' + name + '». Проверьте название в Config.gs');
+    throw new Error('Sheet "' + name + '" not found. Check the name in Config.gs');
   }
   return sheet;
 }
 
 /**
- * Задание *: читаем настройки с листа «Настройки».
- * Возвращает объект вида { ЛИСТ_ЗАКАЗОВ: 'Заказы', ПОРОГ_ПРОСРОЧКИ_Ч: 4, ... }.
- * Пример: const settings = getSettings(); settings.ПОРОГ_ПРОСРОЧКИ_Ч
+ * Задание *: читаем настройки с листа «Settings».
+ * Возвращает объект вида { ORDERS_SHEET: 'Orders', HOT_HOURS: 4, ... }.
+ * Пример: const settings = getSettings(); settings.HOT_HOURS
  */
 function getSettings() {
   const rows = getSheet(SHEETS.SETTINGS).getDataRange().getValues();

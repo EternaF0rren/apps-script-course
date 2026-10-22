@@ -26,13 +26,13 @@
     <section class="slide">
       <h2><span class="num">1</span>const и let</h2>
       <div class="cols">
-<pre class="code">const sheetName = 'Заказы';   // не меняется
+<pre class="code">const sheetName = 'Orders';   // не меняется
 let count = 0;                // будет меняться
 
 count = count + 1;            // теперь 1
 count += 1;                   // теперь 2
 
-sheetName = 'Архив';          // ошибка!</pre>
+sheetName = 'Archive';          // ошибка!</pre>
         <div>
           <p><code>const</code> — коробка с крышкой на замке. Положили значение один раз, и всё.</p>
           <p><code>let</code> — коробка, в которую можно класть новое значение: счётчики, суммы, «последняя найденная строка».</p>
@@ -46,7 +46,7 @@ sheetName = 'Архив';          // ошибка!</pre>
       <h2><span class="num">2</span>Какие бывают значения</h2>
       <table class="map">
         <tr><th>Тип</th><th>Пример в коде</th><th>Откуда берётся в таблице</th></tr>
-        <tr><td>Строка (текст)</td><td><code>'Заказы'</code>, <code>"Готов"</code></td><td>Ячейка с текстом</td></tr>
+        <tr><td>Строка (текст)</td><td><code>'Orders'</code>, <code>"Done"</code></td><td>Ячейка с текстом</td></tr>
         <tr><td>Число</td><td><code>3.5</code>, <code>200</code>, <code>-1</code></td><td>Ячейка с числом. Дробная часть — через точку, не запятую</td></tr>
         <tr><td>Логическое</td><td><code>true</code>, <code>false</code></td><td>Ячейка с флажком (чекбоксом)</td></tr>
         <tr><td>Дата</td><td><code>new Date()</code></td><td>Ячейка с датой или временем</td></tr>
@@ -58,11 +58,11 @@ sheetName = 'Архив';          // ошибка!</pre>
     <section class="slide">
       <h2><span class="num">3</span>Склеиваем текст</h2>
       <div class="cols">
-<pre class="code">const name = 'Ольга Л.';
+<pre class="code">const name = 'Olga L.';
 const count = 7;
 
 // Через плюс
-const a = 'У ' + name + ' заказов: ' + count;
+const a = name + ' has orders: ' + count;
 
 // Через шаблон: обратные кавычки и ${...}
 const b = `У ${name} заказов: ${count}`;
@@ -80,8 +80,8 @@ const b = `У ${name} заказов: ${count}`;
     <section class="slide">
       <h2><span class="num">4</span>Сравниваем значения</h2>
       <div class="cols">
-<pre class="code">status === 'Готов'      // равно
-status !== 'Готов'      // не равно
+<pre class="code">status === 'Done'      // равно
+status !== 'Done'      // не равно
 hours > 8               // больше
 hours &lt;= 8              // меньше или равно
 
@@ -89,8 +89,8 @@ hours &lt;= 8              // меньше или равно
 Number('5') === 5       // true
 
 // Два условия сразу
-status === 'Проблема' &amp;&amp; hours > 8   // И
-status === 'Новый' || status === 'В работе'  // ИЛИ</pre>
+status === 'Problem' &amp;&amp; hours > 8   // И
+status === 'New' || status === 'In Progress'  // ИЛИ</pre>
         <div>
           <p>Сравниваем тремя знаками: <code>===</code> и <code>!==</code>. Двойное <code>==</code> пытается «угадать» тип и иногда угадывает не то.</p>
           <p>Число из таблицы иногда приходит текстом — например, если в ячейке «3,5». Перед сравнением превратите его в число: <code>Number(...)</code>.</p>
@@ -107,7 +107,7 @@ status === 'Новый' || status === 'В работе'  // ИЛИ</pre>
 <pre class="code">const orders = ...;
 const lastRow = ...;
 const deadlineHours = 24;
-const SHEET_NAME = 'Заказы'; // настройка</pre>
+const SHEET_NAME = 'Orders'; // настройка</pre>
         </div>
         <div>
           <h3>Так нельзя или не стоит</h3>

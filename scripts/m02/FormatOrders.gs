@@ -1,7 +1,7 @@
 /**
  * Модуль 2, урок 3. Форматирование скриптом.
  *
- * Одна функция приводит лист «Заказы» к единому виду:
+ * Одна функция приводит лист «Orders» к единому виду:
  * шапка, закрепление, чередование строк, форматы дат и чисел,
  * подсветка просроченных и проблемных заказов.
  * Запускать можно сколько угодно раз — результат будет одинаковым.
@@ -12,12 +12,12 @@ const STYLE = {
   HEADER_BG: '#1f2a44',
   HEADER_FONT: '#ffffff',
   OVERDUE_BG: '#fde2e1',   // просрочено — светло-красный
-  PROBLEM_FONT: '#c62828', // статус «Проблема» — красный текст
+  PROBLEM_FONT: '#c62828', // статус «Problem» — красный текст
   DONE_FONT: '#9e9e9e',    // готовые — серым, чтобы не отвлекали
 };
 
 function formatOrdersSheet() {
-  const sheet = SpreadsheetApp.getActive().getSheetByName('Заказы');
+  const sheet = SpreadsheetApp.getActive().getSheetByName('Orders');
   const lastRow = sheet.getLastRow();
   const lastCol = sheet.getLastColumn();
   const body = sheet.getRange(2, 1, lastRow - 1, lastCol);
@@ -46,20 +46,20 @@ function formatOrdersSheet() {
   // 5. Условное форматирование. В формулах — английские имена функций
   //    и запятые: так их понимает Apps Script при любом языке таблицы.
   const overdue = SpreadsheetApp.newConditionalFormatRule()
-    .whenFormulaSatisfied('=AND($C2<NOW(), $E2<>"Готов")')
+    .whenFormulaSatisfied('=AND($C2<NOW(), $E2<>"Done")')
     .setBackground(STYLE.OVERDUE_BG)
     .setRanges([body])
     .build();
 
   const problem = SpreadsheetApp.newConditionalFormatRule()
-    .whenTextEqualTo('Проблема')
+    .whenTextEqualTo('Problem')
     .setFontColor(STYLE.PROBLEM_FONT)
     .setBold(true)
     .setRanges([sheet.getRange('E2:E' + lastRow)])
     .build();
 
   const done = SpreadsheetApp.newConditionalFormatRule()
-    .whenFormulaSatisfied('=$E2="Готов"')
+    .whenFormulaSatisfied('=$E2="Done"')
     .setFontColor(STYLE.DONE_FONT)
     .setRanges([body])
     .build();
@@ -70,7 +70,7 @@ function formatOrdersSheet() {
   // 6. Ширина колонок под содержимое
   sheet.autoResizeColumns(1, lastCol);
 
-  SpreadsheetApp.getActive().toast('Лист «Заказы» оформлен', 'Готово', 3);
+  SpreadsheetApp.getActive().toast('Orders sheet formatted', 'Done', 3);
 }
 
 /**
@@ -78,7 +78,7 @@ function formatOrdersSheet() {
  * Применяет шрифт и оформление шапки; данные не трогает.
  */
 function applyStyleToAllSheets() {
-  const SKIP = ['Справка', 'Настройки'];
+  const SKIP = ['Help', 'Settings'];
 
   SpreadsheetApp.getActive().getSheets().forEach(function (sheet) {
     if (SKIP.indexOf(sheet.getName()) !== -1) return; // пропускаем служебные

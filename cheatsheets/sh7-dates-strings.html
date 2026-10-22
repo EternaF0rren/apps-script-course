@@ -112,19 +112,19 @@ Utilities.formatDate(now, tz, 'yyyy-MM-dd')
     <section class="slide">
       <h2><span class="num">5</span>Строки: чистка и поиск</h2>
       <div class="cols">
-<pre class="code">'  Ольга Л. '.trim()          // 'Ольга Л.'
-'ГОТОВ'.toLowerCase()         // 'готов'
+<pre class="code">'  Olga L. '.trim()           // 'Olga L.'
+'DONE'.toLowerCase()          // 'done'
 'ord-1001'.toUpperCase()      // 'ORD-1001'
 
-'Нужны доп. фото'.includes('фото')   // true
+'More photos needed'.includes('photos')   // true
 'ORD-1001'.startsWith('ORD')         // true
 
-'Иванова Анна'.split(' ')     // ['Иванова', 'Анна']
+'Ivanova Anna'.split(' ')     // ['Ivanova', 'Anna']
 '3,5'.replace(',', '.')       // '3.5'
 'a-b-c'.replaceAll('-', '')   // 'abc'
 
 String(7).padStart(3, '0')    // '007' — для ID
-'Заказ'.length                // 5</pre>
+'Order'.length                // 5</pre>
         <div>
           <p>Методы строк не меняют исходный текст, а возвращают новый. Результат нужно сохранить: <code>name = name.trim()</code>.</p>
           <p><code>replace</code> меняет только <b>первое</b> вхождение, <code>replaceAll</code> — все.</p>

@@ -3,16 +3,16 @@
  */
 
 /**
- * Сводка просрочек на почту. Адрес берётся с листа «Настройки» (EMAIL_УВЕДОМЛЕНИЙ),
+ * Сводка просрочек на почту. Адрес берётся с листа «Settings» (NOTIFY_EMAIL),
  * а если там пусто — письмо уходит вам. Нет просрочек — письма нет.
  */
 function sendOverdueDigest() {
   const ss = SpreadsheetApp.getActive();
-  const values = ss.getSheetByName('Заказы').getDataRange().getValues();
+  const values = ss.getSheetByName('Orders').getDataRange().getValues();
   const now = new Date();
 
   const overdue = values.slice(1).filter(function (row) {
-    return row[2] instanceof Date && row[2] < now && row[4] !== 'Готов';
+    return row[2] instanceof Date && row[2] < now && row[4] !== 'Done';
   });
   if (overdue.length === 0) return;
 
@@ -22,22 +22,22 @@ function sendOverdueDigest() {
       Utilities.formatDate(row[2], tz, 'dd.MM HH:mm') + '</td></tr>';
   }).join('');
 
-  const html = '<p>Просроченных заказов: <b>' + overdue.length + '</b></p>' +
+  const html = '<p>Overdue orders: <b>' + overdue.length + '</b></p>' +
     '<table border="1" cellpadding="4" style="border-collapse:collapse">' +
-    '<tr><th>ID</th><th>Исполнитель</th><th>Статус</th><th>Дедлайн</th></tr>' + rowsHtml + '</table>' +
-    '<p><a href="' + ss.getUrl() + '">Открыть таблицу</a></p>';
+    '<tr><th>ID</th><th>Assignee</th><th>Status</th><th>Deadline</th></tr>' + rowsHtml + '</table>' +
+    '<p><a href="' + ss.getUrl() + '">Open the spreadsheet</a></p>';
 
   MailApp.sendEmail({
     to: getNotifyEmail_(),
-    subject: 'Просрочки: ' + overdue.length + ' заказов',
+    subject: 'Overdue: ' + overdue.length + ' orders',
     htmlBody: html,
   });
 }
 
-/** Адрес для уведомлений: с листа «Настройки» или ваш собственный. */
+/** Адрес для уведомлений: с листа «Settings» или ваш собственный. */
 function getNotifyEmail_() {
-  const rows = SpreadsheetApp.getActive().getSheetByName('Настройки').getDataRange().getValues();
-  const found = rows.filter(function (row) { return row[0] === 'EMAIL_УВЕДОМЛЕНИЙ'; })[0];
+  const rows = SpreadsheetApp.getActive().getSheetByName('Settings').getDataRange().getValues();
+  const found = rows.filter(function (row) { return row[0] === 'NOTIFY_EMAIL'; })[0];
   const email = found ? String(found[1]).trim() : '';
   return email || Session.getEffectiveUser().getEmail();
 }
@@ -51,17 +51,17 @@ function getNotifyEmail_() {
  */
 function saveSlackWebhook() {
   const ui = SpreadsheetApp.getUi();
-  const answer = ui.prompt('Slack', 'Вставьте адрес входящего вебхука (https://hooks.slack.com/...)', ui.ButtonSet.OK_CANCEL);
+  const answer = ui.prompt('Slack', 'Paste the incoming webhook URL (https://hooks.slack.com/...)', ui.ButtonSet.OK_CANCEL);
   if (answer.getSelectedButton() !== ui.Button.OK) return;
   PropertiesService.getScriptProperties().setProperty('SLACK_WEBHOOK', answer.getResponseText().trim());
-  ui.alert('Адрес сохранён в свойствах скрипта.');
+  ui.alert('The URL is saved in script properties.');
 }
 
 /** Отправить текст в канал Slack. */
 function sendSlackMessage_(text) {
   const url = PropertiesService.getScriptProperties().getProperty('SLACK_WEBHOOK');
   if (!url) {
-    console.log('Вебхук Slack не настроен — сообщение не отправлено: ' + text);
+    console.log('Slack webhook is not set up — message not sent: ' + text);
     return;
   }
   UrlFetchApp.fetch(url, {
@@ -77,15 +77,15 @@ function sendSlackMessage_(text) {
  */
 function onProblemStatus(e) {
   const range = e.range;
-  if (range.getSheet().getName() !== 'Заказы') return;
+  if (range.getSheet().getName() !== 'Orders') return;
   if (range.getColumn() !== 5 || range.getRow() < 2 || range.getNumRows() > 1) return;
-  if (e.value !== 'Проблема') return;
+  if (e.value !== 'Problem') return;
 
   const row = range.getSheet().getRange(range.getRow(), 1, 1, 8).getValues()[0];
-  sendSlackMessage_('⚠️ Заказ ' + row[0] + ' в статусе «Проблема». Исполнитель: ' + row[6] + ', супервайзер: ' + row[7]);
+  sendSlackMessage_('⚠️ Order ' + row[0] + ' is in Problem status. Assignee: ' + row[6] + ', supervisor: ' + row[7]);
 }
 
 /** Сколько писем ещё можно отправить сегодня. */
 function checkMailQuota() {
-  console.log('Осталось писем на сегодня: ' + MailApp.getRemainingDailyQuota());
+  console.log('Emails left today: ' + MailApp.getRemainingDailyQuota());
 }

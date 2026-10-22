@@ -43,11 +43,11 @@ function round1_(x) {
 }
 
 /**
- * Читает лист «Заказы» и возвращает список заказов-объектов.
+ * Читает лист «Orders» и возвращает список заказов-объектов.
  * С именами полей код читается проще, чем с row[8] и row[10].
  */
 function readOrders_() {
-  const values = SpreadsheetApp.getActive().getSheetByName('Заказы').getDataRange().getValues().slice(1);
+  const values = SpreadsheetApp.getActive().getSheetByName('Orders').getDataRange().getValues().slice(1);
   const now = new Date();
   return values
     .filter(function (row) { return row[0] !== ''; })
@@ -72,18 +72,18 @@ function readOrders_() {
 /**
  * Урок 1. Описание часов на заказ: запустите и посмотрите в журнал.
  * Сравните результат с формулами в любой пустой ячейке:
- *   =СРЗНАЧ(Заказы!I2:I)  =МЕДИАНА(Заказы!I2:I)
- *   =ПРОЦЕНТИЛЬ(Заказы!I2:I; 0,9)  =СТАНДОТКЛОН(Заказы!I2:I)
+ *   =СРЗНАЧ(Orders!I2:I)  =МЕДИАНА(Orders!I2:I)
+ *   =ПРОЦЕНТИЛЬ(Orders!I2:I; 0,9)  =СТАНДОТКЛОН(Orders!I2:I)
  */
 function describeHours() {
   const hours = readOrders_()
     .map(function (order) { return order.hours; })
     .filter(function (h) { return typeof h === 'number'; });
 
-  console.log('Заказов:        ' + hours.length);
-  console.log('Среднее:        ' + round1_(mean_(hours)) + ' ч');
-  console.log('Медиана:        ' + round1_(median_(hours)) + ' ч');
-  console.log('90-й перцентиль: ' + round1_(percentile_(hours, 0.9)) + ' ч');
-  console.log('Разброс (σ):    ' + round1_(stdev_(hours)) + ' ч');
-  console.log('Мин / макс:     ' + Math.min.apply(null, hours) + ' / ' + Math.max.apply(null, hours) + ' ч');
+  console.log('Orders:          ' + hours.length);
+  console.log('Mean:            ' + round1_(mean_(hours)) + ' h');
+  console.log('Median:          ' + round1_(median_(hours)) + ' h');
+  console.log('90th percentile: ' + round1_(percentile_(hours, 0.9)) + ' h');
+  console.log('Spread (σ):      ' + round1_(stdev_(hours)) + ' h');
+  console.log('Min / max:       ' + Math.min.apply(null, hours) + ' / ' + Math.max.apply(null, hours) + ' h');
 }

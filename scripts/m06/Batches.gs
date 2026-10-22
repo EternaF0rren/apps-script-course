@@ -9,13 +9,13 @@ const BATCH_SIZE = 50;
 
 function processInBatches() {
   const props = PropertiesService.getScriptProperties();
-  const sheet = SpreadsheetApp.getActive().getSheetByName('Заказы');
+  const sheet = SpreadsheetApp.getActive().getSheetByName('Orders');
   const lastRow = sheet.getLastRow();
 
   let startRow = Number(props.getProperty('NEXT_ROW') || 2);
   if (startRow > lastRow) {
     props.deleteProperty('NEXT_ROW');
-    console.log('Все строки обработаны, начинаем сначала при следующем запуске');
+    console.log('All rows processed, starting over on the next run');
     return;
   }
 
@@ -31,5 +31,5 @@ function processInBatches() {
   range.setValues(processed);
 
   props.setProperty('NEXT_ROW', String(startRow + n));
-  console.log('Обработаны строки ' + startRow + '–' + (startRow + n - 1));
+  console.log('Processed rows ' + startRow + '–' + (startRow + n - 1));
 }

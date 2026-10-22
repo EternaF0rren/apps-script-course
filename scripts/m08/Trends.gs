@@ -3,13 +3,13 @@
  */
 
 /**
- * Добавляет на «Сводку» две колонки к блоку по неделям:
+ * Добавляет на «Summary» две колонки к блоку по неделям:
  *   F — изменение числа заказов к прошлой неделе, в процентах;
  *   G — скользящее среднее заказов за 3 недели (сглаживает случайные скачки).
  * Запускайте после buildSummary.
  */
 function addTrendColumns() {
-  const sheet = SpreadsheetApp.getActive().getSheetByName('Сводка');
+  const sheet = SpreadsheetApp.getActive().getSheetByName('Summary');
   const lastRow = sheet.getRange('A1:A').getValues().filter(function (row) { return row[0] !== ''; }).length;
   if (lastRow < 3) return; // нужно хотя бы две недели
 
@@ -22,19 +22,19 @@ function addTrendColumns() {
     return [change, moving];
   });
 
-  sheet.getRange(1, 6, 1, 2).setValues([['Изменение к прошлой неделе', 'Скользящее среднее (3 нед.)']])
+  sheet.getRange(1, 6, 1, 2).setValues([['Change vs Last Week', 'Moving Avg (3 wk)']])
     .setFontWeight('bold');
   sheet.getRange(2, 6, rows.length, 2).setValues(rows);
   sheet.getRange(2, 6, rows.length, 1).setNumberFormat('+0%;-0%;0%');
 }
 
 /**
- * Подсвечивает на листе «Заказы» заказы с необычным числом часов.
+ * Подсвечивает на листе «Orders» заказы с необычным числом часов.
  * Правило межквартильного размаха (IQR): всё, что дальше чем 1,5 × IQR
  * от «средней половины» данных, считаем выбросом.
  */
 function highlightHourOutliers() {
-  const sheet = SpreadsheetApp.getActive().getSheetByName('Заказы');
+  const sheet = SpreadsheetApp.getActive().getSheetByName('Orders');
   const lastRow = sheet.getLastRow();
   const range = sheet.getRange(2, 9, lastRow - 1, 1); // колонка I — часы
   const hours = range.getValues().map(function (row) { return row[0]; });
@@ -55,6 +55,6 @@ function highlightHourOutliers() {
   range.setBackgrounds(colors);
 
   SpreadsheetApp.getActive().toast(
-    'Норма: от ' + round1_(Math.max(low, 0)) + ' до ' + round1_(high) + ' ч. Выбросов: ' + found,
-    'Выбросы по часам');
+    'Normal range: ' + round1_(Math.max(low, 0)) + '–' + round1_(high) + ' h. Outliers: ' + found,
+    'Hour outliers');
 }

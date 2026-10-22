@@ -1,7 +1,7 @@
 /**
- * Модуль 8, урок 2. Метрики по неделям и по типам заказов — на лист «Сводка».
+ * Модуль 8, урок 2. Метрики по неделям и по типам заказов — на лист «Summary».
  *
- * Лист «Сводка» после запуска:
+ * Лист «Summary» после запуска:
  *   A–E — по неделям (только полные недели),
  *   F–G — тренды, их добавляет addTrendColumns из урока 3,
  *   J–P — по типам заказов.
@@ -9,12 +9,12 @@
  */
 function buildSummary() {
   const orders = readOrders_();
-  const sheet = SpreadsheetApp.getActive().getSheetByName('Сводка');
+  const sheet = SpreadsheetApp.getActive().getSheetByName('Summary');
   sheet.clearContents();
 
   writeWeeks_(sheet, orders);
   writeTypes_(sheet, orders);
-  SpreadsheetApp.getActive().toast('Сводка обновлена', 'Модуль 8');
+  SpreadsheetApp.getActive().toast('Summary updated', 'Module 8');
 }
 
 /** Понедельник той недели, в которую попадает дата. */
@@ -48,7 +48,7 @@ function writeWeeks_(sheet, orders) {
     });
 
   sheet.getRange(1, 1, 1, 5)
-    .setValues([['Неделя с', 'Заказов', 'Средние часы', 'Медиана часов', 'Доля просрочек']])
+    .setValues([['Week Of', 'Orders', 'Avg Hours', 'Median Hours', 'Overdue Share']])
     .setFontWeight('bold');
   if (rows.length === 0) return;
   sheet.getRange(2, 1, rows.length, 5).setValues(rows);
@@ -81,7 +81,7 @@ function writeTypes_(sheet, orders) {
   });
 
   sheet.getRange(1, 10, 1, 7)
-    .setValues([['Тип', 'Заказов', 'Средние часы', 'Медиана часов', '90-й перцентиль', 'Средняя оценка QC', 'Доля просрочек']])
+    .setValues([['Type', 'Orders', 'Avg Hours', 'Median Hours', '90th Percentile', 'Avg QC Score', 'Overdue Share']])
     .setFontWeight('bold');
   sheet.getRange(2, 10, rows.length, 7).setValues(rows);
   sheet.getRange(2, 16, rows.length, 1).setNumberFormat('0%');

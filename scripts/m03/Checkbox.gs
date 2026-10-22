@@ -7,13 +7,13 @@
 
 const CLOSE_COL = 13; // M — колонка с флажками
 
-/** Один раз: добавить колонку «Закрыть» с флажками на лист «Заказы». */
+/** Один раз: добавить колонку «Close» с флажками на лист «Orders». */
 function addCloseCheckboxes() {
-  const sheet = SpreadsheetApp.getActive().getSheetByName('Заказы');
+  const sheet = SpreadsheetApp.getActive().getSheetByName('Orders');
   const lastRow = sheet.getLastRow();
-  sheet.getRange(1, CLOSE_COL).setValue('Закрыть');
+  sheet.getRange(1, CLOSE_COL).setValue('Close');
   sheet.getRange(2, CLOSE_COL, lastRow - 1, 1).insertCheckboxes();
-  SpreadsheetApp.getActive().toast('Флажки добавлены в колонку M', 'Готово', 3);
+  SpreadsheetApp.getActive().toast('Checkboxes added to column M', 'Done', 3);
 }
 
 /**
@@ -32,12 +32,12 @@ function handleCloseCheckbox_(e) {
   const range = e.range;
   const sheet = range.getSheet();
 
-  // Реагируем только на флажок в колонке M листа «Заказы», и только когда его ставят
-  if (sheet.getName() !== 'Заказы') return;
+  // Реагируем только на флажок в колонке M листа «Orders», и только когда его ставят
+  if (sheet.getName() !== 'Orders') return;
   if (range.getColumn() !== CLOSE_COL || range.getRow() < 2) return;
   if (e.value !== 'TRUE') return;
 
   const row = range.getRow();
-  sheet.getRange(row, 5).setValue('Готов');      // E — Статус
-  sheet.getRange(row, 11).setValue(new Date());  // K — Сдан
+  sheet.getRange(row, 5).setValue('Done');      // E — Status
+  sheet.getRange(row, 11).setValue(new Date());  // K — Delivered
 }

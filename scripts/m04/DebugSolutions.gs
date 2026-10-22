@@ -4,14 +4,14 @@
 
 /**
  * Задача 1. Ошибка: TypeError: Cannot read properties of null (reading 'getDataRange').
- * Причина: в имени листа лишний пробел — 'Заказы ' вместо 'Заказы'.
+ * Причина: в имени листа лишний пробел — 'Orders ' вместо 'Orders'.
  * getSheetByName не нашёл лист и вернул null.
  */
 function fix1_countProblems() {
-  const sheet = SpreadsheetApp.getActive().getSheetByName('Заказы');
+  const sheet = SpreadsheetApp.getActive().getSheetByName('Orders');
   const values = sheet.getDataRange().getValues();
-  const problems = values.filter(function (row) { return row[4] === 'Проблема'; });
-  console.log('Проблемных заказов: ' + problems.length);
+  const problems = values.filter(function (row) { return row[4] === 'Problem'; });
+  console.log('Problem orders: ' + problems.length);
 }
 
 /**
@@ -22,12 +22,12 @@ function fix1_countProblems() {
  */
 function fix2_writeSummary() {
   const rows = [
-    ['Тип', 'Заказов'],
+    ['Type', 'Orders'],
     ['FP', 95],
     ['ESX', 82],
     ['FF', 23],
   ];
-  const sheet = SpreadsheetApp.getActive().getSheetByName('Сводка');
+  const sheet = SpreadsheetApp.getActive().getSheetByName('Summary');
   sheet.getRange(1, 1, rows.length, rows[0].length).setValues(rows);
 }
 
@@ -38,7 +38,7 @@ function fix2_writeSummary() {
  * и записать их одним setBackgrounds.
  */
 function fix3_fastHighlight() {
-  const sheet = SpreadsheetApp.getActive().getSheetByName('Заказы');
+  const sheet = SpreadsheetApp.getActive().getSheetByName('Orders');
   const range = sheet.getRange(2, 9, sheet.getLastRow() - 1, 1);
   const colors = range.getValues().map(function (row) {
     return [row[0] > 8 ? '#fff59d' : null]; // null — без заливки
@@ -51,6 +51,6 @@ function fix3_fastHighlight() {
  * Причина: в массиве колонки считаются с 0. G — седьмая буква, значит индекс 6.
  */
 function fix4_firstWorker() {
-  const values = SpreadsheetApp.getActive().getSheetByName('Заказы').getDataRange().getValues();
-  console.log('Первый исполнитель: ' + values[1][6]);
+  const values = SpreadsheetApp.getActive().getSheetByName('Orders').getDataRange().getValues();
+  console.log('First assignee: ' + values[1][6]);
 }

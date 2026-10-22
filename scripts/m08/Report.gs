@@ -1,8 +1,8 @@
 /**
  * Модуль 8, урок 6. Отчёт по расписанию: дашборд в PDF и на почту.
  *
- * Нужны: Dashboard.gs (урок 5), getNotifyEmail_ из модуля 5 (файл «Уведомления»)
- * и removeTriggersFor_ из модуля 5 (файл «Триггеры»).
+ * Нужны: Dashboard.gs (урок 5), getNotifyEmail_ из модуля 5 (файл «Notify»)
+ * и removeTriggersFor_ из модуля 5 (файл «Triggers»).
  */
 function sendWeeklyReport() {
   const ss = SpreadsheetApp.getActive();
@@ -14,19 +14,19 @@ function sendWeeklyReport() {
 
   const tz = ss.getSpreadsheetTimeZone();
   const today = Utilities.formatDate(new Date(), tz, 'dd.MM.yyyy');
-  const pdf = exportSheetToPdf_('Дашборд').setName('Отчёт по заказам ' + today + '.pdf');
+  const pdf = exportSheetToPdf_('Dashboard').setName('Orders report ' + today + '.pdf');
 
   // Короткая выжимка прямо в тексте письма: заказов и доля просрочек за неделю
-  const kpi = ss.getSheetByName('Дашборд').getRange('A5:D8').getDisplayValues();
+  const kpi = ss.getSheetByName('Dashboard').getRange('A5:D8').getDisplayValues();
   const lines = kpi.map(function (row) {
-    return '<li>' + row[0] + ': <b>' + row[1] + '</b> (неделей раньше ' + row[2] + ')</li>';
+    return '<li>' + row[0] + ': <b>' + row[1] + '</b> (week before: ' + row[2] + ')</li>';
   }).join('');
 
   MailApp.sendEmail({
     to: getNotifyEmail_(),
-    subject: 'Отчёт по заказам · ' + today,
-    htmlBody: '<p>Итоги последней полной недели:</p><ul>' + lines + '</ul>' +
-      '<p>Дашборд — во вложении. <a href="' + ss.getUrl() + '">Открыть таблицу</a></p>',
+    subject: 'Orders report · ' + today,
+    htmlBody: '<p>Last full week results:</p><ul>' + lines + '</ul>' +
+      '<p>The dashboard is attached. <a href="' + ss.getUrl() + '">Open the spreadsheet</a></p>',
     attachments: [pdf],
   });
 }
@@ -64,5 +64,5 @@ function createWeeklyReportTrigger() {
     .onWeekDay(ScriptApp.WeekDay.MONDAY)
     .atHour(8)
     .create();
-  SpreadsheetApp.getActive().toast('Отчёт будет приходить по понедельникам в 8:00');
+  SpreadsheetApp.getActive().toast('The report will arrive on Mondays at 8:00');
 }

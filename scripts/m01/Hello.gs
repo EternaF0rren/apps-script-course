@@ -7,11 +7,11 @@
  */
 function helloSheet() {
   const ss = SpreadsheetApp.getActive();
-  console.log('Таблица: ' + ss.getName());
+  console.log('Spreadsheet: ' + ss.getName());
 
   ss.getSheets().forEach(function (sheet) {
     // getLastRow() — номер последней заполненной строки
-    console.log('Лист «' + sheet.getName() + '»: строк с данными — ' + sheet.getLastRow());
+    console.log('Sheet "' + sheet.getName() + '": rows with data — ' + sheet.getLastRow());
   });
 }
 
@@ -20,7 +20,7 @@ function helloSheet() {
  * Работает, только если функция запущена из таблицы (меню или кнопка, модуль 3).
  */
 function helloToast() {
-  const orders = SpreadsheetApp.getActive().getSheetByName('Заказы');
+  const orders = SpreadsheetApp.getActive().getSheetByName('Orders');
   const count = orders.getLastRow() - 1; // минус строка заголовка
-  SpreadsheetApp.getActive().toast('В таблице ' + count + ' заказов', 'Привет от скрипта', 5);
+  SpreadsheetApp.getActive().toast('The spreadsheet has ' + count + ' orders', 'Hello from the script', 5);
 }

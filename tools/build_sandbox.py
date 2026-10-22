@@ -12,11 +12,11 @@ NAVY = "1F2A44"
 HEADER_FONT = Font(bold=True, color="FFFFFF", name="Arial")
 HEADER_FILL = PatternFill("solid", fgColor=NAVY)
 
-first = ["Анна", "Борис", "Вера", "Глеб", "Дарья", "Егор", "Жанна", "Захар", "Ирина", "Кирилл",
-         "Лиана", "Марк", "Нина", "Олег", "Полина", "Роман", "Софья", "Тимур", "Ульяна", "Фёдор",
-         "Алекс", "Майя", "Ник", "Ева", "Лев", "Ольга", "Сергей", "Тина", "Юлия", "Ян"]
-last_initial = list("АБВГДЕЗИКЛМНОПРСТФХШ")
-countries = ["Грузия", "Армения", "Казахстан", "Сербия", "Польша", "Узбекистан"]
+first = ["Anna", "Boris", "Vera", "Gleb", "Daria", "Egor", "Jeanne", "Zakhar", "Irina", "Kirill",
+         "Liana", "Mark", "Nina", "Oleg", "Polina", "Roman", "Sofia", "Timur", "Ulyana", "Fedor",
+         "Alex", "Maya", "Nick", "Eva", "Leo", "Olga", "Sergey", "Tina", "Julia", "Yan"]
+last_initial = list("ABVGDEZIKLMNOPRSTFHW")
+countries = ["Georgia", "Armenia", "Kazakhstan", "Serbia", "Poland", "Uzbekistan"]
 
 # ---- Employees ----
 employees = []
@@ -29,7 +29,7 @@ for i in range(30):
     employees.append({
         "id": f"D-{i+1:03d}",
         "name": f"{first[i]} {random.choice(last_initial)}.",
-        "role": "Составитель",
+        "role": "Drafter",
         "team": random.choice(["FP", "ESX", "FP", "ESX", "FF"]),
         "country": random.choice(countries),
         "sup": sup["name"],
@@ -48,23 +48,23 @@ def style_header(ws, widths):
         ws.column_dimensions[get_column_letter(c)].width = w
     ws.freeze_panes = "A2"
 
-# ---- Справка ----
+# ---- Help ----
 ws = wb.active
-ws.title = "Справка"
+ws.title = "Help"
 info = [
-    ["Учебная таблица курса «Скрипты для Google Таблиц»"],
+    ["Course sandbox: Google Sheets Scripts"],
     [""],
-    ["Перед работой: Файл → Создать копию. Все скрипты курса запускаются на копии."],
-    ["Все имена, email и цифры вымышлены. Совпадения с реальными людьми случайны."],
+    ["Before you start: File → Make a copy. Run every course script on your copy."],
+    ["All names, emails and numbers are fictional. Any resemblance to real people is coincidental."],
     [""],
-    ["Лист", "Что внутри", "Где используется"],
-    ["Заказы", "200 заказов за 3 месяца: даты, дедлайны, статусы, исполнители, часы, оценки QC", "Модули 2, 3, 5, 6, 8"],
-    ["Сотрудники", "30 составителей: команда, страна, супервайзер, вымышленный email", "Модули 5, 6, 7"],
-    ["Часы", "Рабочие и залогированные часы по неделям", "Модули 6, 8"],
-    ["Выгрузка", "«Грязная» выгрузка: пробелы, регистр, дубли, пустые строки, даты текстом", "Модули 2, 6"],
-    ["Архив", "Пустой лист для закрытых заказов", "Модуль 5"],
-    ["Сводка", "Пустой лист для метрик и графиков", "Модуль 8"],
-    ["Настройки", "Параметры, которые читают скрипты: имена листов, пороги, адреса", "Модули 1, 5"],
+    ["Sheet", "What's inside", "Used in"],
+    ["Orders", "200 orders over 3 months: dates, deadlines, statuses, assignees, hours, QC scores", "Modules 2, 3, 5, 6, 8"],
+    ["Employees", "30 drafters: team, country, supervisor, fictional email", "Modules 5, 6, 7"],
+    ["Hours", "Worked and logged hours by week", "Modules 6, 8"],
+    ["Export", "A messy export: extra spaces, mixed case, duplicates, empty rows, dates as text", "Modules 2, 6"],
+    ["Archive", "Empty sheet for closed orders", "Module 5"],
+    ["Summary", "Empty sheet for metrics and charts", "Module 8"],
+    ["Settings", "Parameters the scripts read: sheet names, thresholds, addresses", "Modules 1, 5"],
 ]
 for r in info:
     ws.append(r)
@@ -76,14 +76,14 @@ ws.column_dimensions["A"].width = 16
 ws.column_dimensions["B"].width = 80
 ws.column_dimensions["C"].width = 24
 
-# ---- Заказы ----
-ws = wb.create_sheet("Заказы")
-headers = ["ID заказа", "Создан", "Дедлайн", "Тип", "Статус", "ID исполнителя", "Исполнитель",
-           "Супервайзер", "Часы", "Оценка QC", "Сдан", "Комментарий"]
+# ---- Orders ----
+ws = wb.create_sheet("Orders")
+headers = ["Order ID", "Created", "Deadline", "Type", "Status", "Assignee ID", "Assignee",
+           "Supervisor", "Hours", "QC Score", "Delivered", "Comment"]
 ws.append(headers)
 now = datetime(2026, 10, 19, 12, 0)
 start = datetime(2026, 7, 20, 8, 0)
-comments = ["", "", "", "Клиент просил ускорить", "Нужны доп. фото", "Повторная проверка", "", "Сложный план этажа", ""]
+comments = ["", "", "", "Client asked to rush", "More photos needed", "Second review", "", "Complex floor plan", ""]
 orders = []
 for i in range(200):
     created = start + timedelta(minutes=random.randint(0, int((now - start).total_seconds() // 60) - 600))
@@ -95,14 +95,14 @@ for i in range(200):
         hours = round(hours * random.uniform(3, 5), 1)  # outliers for module 8
     age_h = (now - created).total_seconds() / 3600
     if age_h > 240:
-        status = random.choices(["Готов", "Проблема"], weights=[95, 5])[0]
+        status = random.choices(["Done", "Problem"], weights=[95, 5])[0]
     elif age_h > 30:
-        status = random.choices(["Готов", "На проверке", "В работе", "Проблема"], weights=[50, 15, 25, 10])[0]
+        status = random.choices(["Done", "In Review", "In Progress", "Problem"], weights=[50, 15, 25, 10])[0]
     else:
-        status = random.choice(["Новый", "В работе", "На проверке"])
+        status = random.choice(["New", "In Progress", "In Review"])
     done = None
     qc = None
-    if status == "Готов":
+    if status == "Done":
         late = random.random() < 0.12
         done = deadline + timedelta(hours=random.uniform(1, 20)) if late else created + timedelta(
             hours=random.uniform(2, (deadline - created).total_seconds() / 3600 - 0.5))
@@ -118,18 +118,18 @@ for row in ws.iter_rows(min_row=2):
     for idx in (1, 2, 10):
         row[idx].number_format = "dd.mm.yyyy hh:mm"
 
-# ---- Сотрудники ----
-ws = wb.create_sheet("Сотрудники")
-ws.append(["ID", "Имя", "Роль", "Команда", "Страна", "Супервайзер", "Email", "Дата начала"])
+# ---- Employees ----
+ws = wb.create_sheet("Employees")
+ws.append(["ID", "Name", "Role", "Team", "Country", "Supervisor", "Email", "Start Date"])
 for e in employees:
     ws.append([e["id"], e["name"], e["role"], e["team"], e["country"], e["sup"], e["email"], e["start"]])
 style_header(ws, [8, 14, 13, 9, 12, 14, 24, 13])
 for row in ws.iter_rows(min_row=2):
     row[7].number_format = "dd.mm.yyyy"
 
-# ---- Часы ----
-ws = wb.create_sheet("Часы")
-ws.append(["Неделя с", "ID", "Имя", "Рабочие часы", "Залогированные часы"])
+# ---- Hours ----
+ws = wb.create_sheet("Hours")
+ws.append(["Week Of", "ID", "Name", "Worked Hours", "Logged Hours"])
 week0 = date(2026, 8, 24)
 for w in range(8):
     wk = week0 + timedelta(weeks=w)
@@ -143,9 +143,9 @@ style_header(ws, [12, 8, 14, 14, 20])
 for row in ws.iter_rows(min_row=2):
     row[0].number_format = "dd.mm.yyyy"
 
-# ---- Выгрузка (messy) ----
-ws = wb.create_sheet("Выгрузка")
-ws.append(["id", "исполнитель", "статус", "дата", "часы"])
+# ---- Export (messy) ----
+ws = wb.create_sheet("Export")
+ws.append(["id", "assignee", "status", "date", "hours"])
 sample = random.sample(orders, 40)
 messy = []
 for r in sample:
@@ -169,23 +169,23 @@ for i, m in enumerate(messy):
 for c, w in enumerate([12, 18, 14, 12, 8], start=1):
     ws.column_dimensions[get_column_letter(c)].width = w
 
-# ---- Архив, Сводка ----
-ws = wb.create_sheet("Архив")
-ws.append(headers + ["Дата архивации"])
+# ---- Archive, Summary ----
+ws = wb.create_sheet("Archive")
+ws.append(headers + ["Archived At"])
 style_header(ws, [12, 17, 17, 6, 13, 14, 14, 14, 7, 10, 17, 26, 17])
-ws = wb.create_sheet("Сводка")
-ws["A1"] = "Сюда скрипты модуля 8 выводят метрики и графики"
+ws = wb.create_sheet("Summary")
+ws["A1"] = "Module 8 scripts write metrics and charts here"
 
-# ---- Настройки ----
-ws = wb.create_sheet("Настройки")
-ws.append(["Параметр", "Значение", "Описание"])
+# ---- Settings ----
+ws = wb.create_sheet("Settings")
+ws.append(["Parameter", "Value", "Description"])
 for r in [
-    ["ЛИСТ_ЗАКАЗОВ", "Заказы", "Откуда скрипты берут заказы"],
-    ["ЛИСТ_АРХИВА", "Архив", "Куда переносятся закрытые заказы"],
-    ["ПОРОГ_ПРОСРОЧКИ_Ч", 4, "За сколько часов до дедлайна заказ считается «горящим»"],
-    ["EMAIL_УВЕДОМЛЕНИЙ", "", "Ваш email для уведомлений (модуль 5)"],
-    ["SLACK_WEBHOOK", "", "Адрес входящего webhook Slack (модуль 5, по желанию)"],
-    ["ЧАСОВОЙ_ПОЯС", "Asia/Tbilisi", "Часовой пояс для дат в отчётах"],
+    ["ORDERS_SHEET", "Orders", "Sheet the scripts read orders from"],
+    ["ARCHIVE_SHEET", "Archive", "Sheet closed orders are moved to"],
+    ["HOT_HOURS", 4, "Hours before the deadline when an order counts as urgent"],
+    ["NOTIFY_EMAIL", "", "Your email for notifications (module 5)"],
+    ["SLACK_WEBHOOK", "", "Leave empty: the webhook URL lives in script properties (module 5)"],
+    ["TIME_ZONE", "Asia/Tbilisi", "Time zone for dates in reports"],
 ]:
     ws.append(r)
 style_header(ws, [22, 22, 56])

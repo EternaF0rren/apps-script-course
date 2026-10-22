@@ -6,23 +6,23 @@
  * Правильные версии — в файле DebugSolutions.gs. Не подглядывайте сразу!
  */
 
-/** Задача 1. Посчитать заказы со статусом «Проблема». */
+/** Задача 1. Посчитать заказы со статусом «Problem». */
 function bug1_countProblems() {
-  const sheet = SpreadsheetApp.getActive().getSheetByName('Заказы ');
+  const sheet = SpreadsheetApp.getActive().getSheetByName('Orders ');
   const values = sheet.getDataRange().getValues();
-  const problems = values.filter(function (row) { return row[4] === 'Проблема'; });
-  console.log('Проблемных заказов: ' + problems.length);
+  const problems = values.filter(function (row) { return row[4] === 'Problem'; });
+  console.log('Problem orders: ' + problems.length);
 }
 
-/** Задача 2. Записать на лист «Сводка» таблицу «Тип — число заказов». */
+/** Задача 2. Записать на лист «Summary» таблицу «Тип — число заказов». */
 function bug2_writeSummary() {
   const rows = [
-    ['Тип', 'Заказов'],
+    ['Type', 'Orders'],
     ['FP', 95],
     ['ESX', 82],
     ['FF', 23],
   ];
-  const sheet = SpreadsheetApp.getActive().getSheetByName('Сводка');
+  const sheet = SpreadsheetApp.getActive().getSheetByName('Summary');
   sheet.getRange(1, 1, 3, 2).setValues(rows);
 }
 
@@ -31,7 +31,7 @@ function bug2_writeSummary() {
  * Ошибки нет, но на большом листе функция работает очень долго. Почему?
  */
 function bug3_slowHighlight() {
-  const sheet = SpreadsheetApp.getActive().getSheetByName('Заказы');
+  const sheet = SpreadsheetApp.getActive().getSheetByName('Orders');
   for (let row = 2; row <= sheet.getLastRow(); row++) {
     const hours = sheet.getRange(row, 9).getValue();
     if (hours > 8) {
@@ -42,7 +42,7 @@ function bug3_slowHighlight() {
 
 /** Задача 4. Вывести исполнителя первого заказа. */
 function bug4_firstWorker() {
-  const values = SpreadsheetApp.getActive().getSheetByName('Заказы').getDataRange().getValues();
-  // Хотим колонку G «Исполнитель» первой строки данных
-  console.log('Первый исполнитель: ' + values[1][7]);
+  const values = SpreadsheetApp.getActive().getSheetByName('Orders').getDataRange().getValues();
+  // Хотим колонку G «Assignee» первой строки данных
+  console.log('First assignee: ' + values[1][7]);
 }

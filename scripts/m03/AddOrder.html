@@ -13,17 +13,17 @@
   </head>
   <body>
     <form id="f" onsubmit="send(event)">
-      <label>Тип заказа</label>
+      <label>Order type</label>
       <select name="type"><option>FP</option><option>ESX</option><option>FF</option></select>
-      <label>ID исполнителя</label>
+      <label>Assignee ID</label>
       <input name="workerId" placeholder="D-004" required>
-      <label>Исполнитель</label>
-      <input name="workerName" placeholder="Глеб Г." required>
-      <label>Супервайзер</label>
-      <input name="supervisor" placeholder="Юлия И.">
-      <label>Комментарий</label>
+      <label>Assignee</label>
+      <input name="workerName" placeholder="Gleb G." required>
+      <label>Supervisor</label>
+      <input name="supervisor" placeholder="Julia I.">
+      <label>Comment</label>
       <textarea name="comment" rows="3"></textarea>
-      <button id="b">Добавить заказ</button>
+      <button id="b">Add order</button>
     </form>
     <div id="msg"></div>
     <script>
@@ -34,12 +34,12 @@
         document.getElementById('b').disabled = true;
         google.script.run
           .withSuccessHandler(function (id) {
-            document.getElementById('msg').textContent = 'Добавлен заказ ' + id;
+            document.getElementById('msg').textContent = 'Order added: ' + id;
             form.reset();
             document.getElementById('b').disabled = false;
           })
           .withFailureHandler(function (err) {
-            document.getElementById('msg').textContent = 'Ошибка: ' + err.message;
+            document.getElementById('msg').textContent = 'Error: ' + err.message;
             document.getElementById('b').disabled = false;
           })
           .addOrderFromForm(form);

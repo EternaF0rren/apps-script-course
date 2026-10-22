@@ -1,7 +1,7 @@
 /**
  * Модуль 2, урок 4. «Привести в порядок» одной кнопкой.
  *
- * Лист «Выгрузка» — типичная выгрузка из другой системы:
+ * Лист «Export» — типичная выгрузка из другой системы:
  * лишние пробелы, РАЗНЫЙ регистр, дубли, пустые строки, даты текстом
  * в трёх форматах, часы с запятой. Функция tidyExport чинит всё разом.
  *
@@ -9,7 +9,7 @@
  * (правый клик по вкладке → «Создать копию»).
  */
 function tidyExport() {
-  const sheet = SpreadsheetApp.getActive().getSheetByName('Выгрузка');
+  const sheet = SpreadsheetApp.getActive().getSheetByName('Export');
 
   // 1. Встроенная чистка пробелов: убирает пробелы по краям и двойные внутри
   sheet.getDataRange().trimWhitespace();
@@ -24,8 +24,8 @@ function tidyExport() {
     .map(function (row) {
       return [
         row[0],                  // id — без изменений
-        toNameCase(row[1]),      // исполнитель: «ОЛЬГА Л.» → «Ольга Л.»
-        capitalizeFirst(row[2]), // статус: «НА ПРОВЕРКЕ» → «На проверке»
+        toNameCase(row[1]),      // исполнитель: «OLGA L.» → «Olga L.»
+        toNameCase(row[2]),      // статус: «IN REVIEW» → «In Review»
         parseDate(row[3]),       // дата: текст → настоящая дата
         parseNumber(row[4]),     // часы: «3,5» → 3.5
       ];
@@ -44,10 +44,10 @@ function tidyExport() {
 
   const left = sheet.getLastRow() - 1;
   SpreadsheetApp.getActive().toast(
-    'Было строк: ' + (values.length - 1) + ', стало: ' + left, 'Выгрузка в порядке', 5);
+    'Rows before: ' + (values.length - 1) + ', after: ' + left, 'Export tidied', 5);
 }
 
-/** «  ОЛЬГА л. » → «Ольга Л.»: первая буква каждого слова заглавная. */
+/** «  OLGA l. » → «Olga L.», «in review» → «In Review»: первая буква каждого слова заглавная. */
 function toNameCase(value) {
   return String(value)
     .trim()
@@ -55,12 +55,6 @@ function toNameCase(value) {
     .split(' ')
     .map(function (word) { return word.charAt(0).toUpperCase() + word.slice(1); })
     .join(' ');
-}
-
-/** «  НА ПРОВЕРКЕ» → «На проверке»: заглавная только первая буква. */
-function capitalizeFirst(value) {
-  const text = String(value).trim().toLowerCase();
-  return text.charAt(0).toUpperCase() + text.slice(1);
 }
 
 /**
