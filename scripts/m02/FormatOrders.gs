@@ -72,23 +72,3 @@ function formatOrdersSheet() {
 
   SpreadsheetApp.getActive().toast('Orders sheet formatted', 'Done', 3);
 }
-
-/**
- * Задание *: единый стиль для всех листов книги, кроме служебных.
- * Применяет шрифт и оформление шапки; данные не трогает.
- */
-function applyStyleToAllSheets() {
-  const SKIP = ['Help', 'Settings'];
-
-  SpreadsheetApp.getActive().getSheets().forEach(function (sheet) {
-    if (SKIP.indexOf(sheet.getName()) !== -1) return; // пропускаем служебные
-    if (sheet.getLastColumn() === 0) return;           // пустой лист
-
-    sheet.getDataRange().setFontFamily(STYLE.FONT).setFontSize(10);
-    sheet.getRange(1, 1, 1, sheet.getLastColumn())
-      .setBackground(STYLE.HEADER_BG)
-      .setFontColor(STYLE.HEADER_FONT)
-      .setFontWeight('bold');
-    sheet.setFrozenRows(1);
-  });
-}
