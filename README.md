@@ -4,7 +4,7 @@
 Курс учит находить в своей работе рутину, которую можно отдать скрипту, и автоматизировать её:
 от форматирования и кнопок до автоотчётов со статистикой и графиками.
 
-**Сайт курса:** https://&lt;github-логин&gt;.github.io/apps-script-course/
+**Сайт курса:** [https://&lt;github-логин&gt;.github.io/apps-script-course/](https://eternaf0rren.github.io/apps-script-course/)
 
 ## Что здесь лежит
 
