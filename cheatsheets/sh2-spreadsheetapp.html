@@ -57,24 +57,24 @@ const values = range.getValues();</pre>
         <tr><td><code>ss.getActiveSheet()</code></td><td>Лист, который сейчас открыт у пользователя</td></tr>
         <tr><td><code>ss.getSheets()</code></td><td>Список всех листов, чтобы пройти по каждому</td></tr>
         <tr><td><code>ss.insertSheet('October')</code></td><td>Создать новый лист</td></tr>
-        <tr><td><code>SpreadsheetApp.openById('ID')</code></td><td>Открыть другую таблицу по ID из её ссылки (модуль 6)</td></tr>
+        <tr><td><code>SpreadsheetApp.openById('ID')</code></td><td>Открыть другую таблицу по ID из её ссылки (<a href="https://docs.google.com/document/d/1Fk2q8OthXoY0xDYuGhodQrIqktpbT6mKWS6amwSNP70/edit?tab=t.z9f7gwhkrgbn" target="_blank" rel="noopener">модуль 6</a>)</td></tr>
       </table>
       <div class="note">ID таблицы — длинный кусок ссылки между <code>/d/</code> и <code>/edit</code>.</div>
     </section>
 
     <section class="slide">
       <h2><span class="num">3</span>Как взять диапазон</h2>
-      <div class="cols">
-<pre class="code">sheet.getRange('A1')          // одна ячейка
-sheet.getRange('A1:L1')       // шапка
-sheet.getRange(2, 5)          // строка 2, колонка 5 (E2)
+      <div class="cols code-wide">
+<pre class="code">sheet.getRange('A1')        // одна ячейка
+sheet.getRange('A1:L1')     // шапка
+sheet.getRange(2, 5)        // строка 2, колонка 5 (E2)
 
 // строка, колонка, сколько строк, сколько колонок
-sheet.getRange(2, 1, 10, 3)   // A2:C11
+sheet.getRange(2, 1, 10, 3) // A2:C11
 
-sheet.getDataRange()          // всё, где есть данные
-sheet.getLastRow()            // номер последней строки
-sheet.getLastColumn()         // номер последней колонки</pre>
+sheet.getDataRange()        // всё, где есть данные
+sheet.getLastRow()          // номер последней строки
+sheet.getLastColumn()       // номер последней колонки</pre>
         <div>
           <p>Буквенный адрес <code>'A1:L1'</code> удобен, когда диапазон всегда один и тот же.</p>
           <p>Числовой <code>getRange(строка, колонка, строк, колонок)</code> — когда размер меняется: «от второй строки до последней».</p>
@@ -88,7 +88,7 @@ sheet.getRange(2, 1,
 
     <section class="slide">
       <h2><span class="num">4</span>Читать и записывать</h2>
-      <div class="cols">
+      <div class="cols code-wide">
 <pre class="code">// Одна ячейка
 const status = sheet.getRange('E2').getValue();
 sheet.getRange('E2').setValue('Done');
@@ -129,7 +129,7 @@ sheet.appendRow(['ORD-10201', new Date(), 'New']);</pre>
 
     <section class="slide">
       <h2><span class="num">6</span>Сказать пользователю</h2>
-      <div class="cols">
+      <div class="cols code-wide">
 <pre class="code">// Всплывающее сообщение в углу таблицы
 SpreadsheetApp.getActive().toast('Done!', 'Script', 5);
 
@@ -140,7 +140,7 @@ SpreadsheetApp.getUi().alert('Found 12 overdue orders');
 console.log('Rows processed: ' + rows.length);</pre>
         <div>
           <p><code>toast</code> — ненавязчиво: появилось и исчезло через 5 секунд.</p>
-          <p><code>alert</code> — требует нажать ОК. Подходит для важного: «Удалить 40 строк?» (подробнее — в модуле 3).</p>
+          <p><code>alert</code> — требует нажать ОК. Подходит для важного: «Удалить 40 строк?» (подробнее — в <a href="https://docs.google.com/document/d/1ItiXm9IVOcqtmFVwrqTZn0zjn7lCG8Ylvvo4Dp6qDDE/edit?tab=t.mmafuue5tmb8" target="_blank" rel="noopener">модуле 3</a>).</p>
           <p><code>console.log</code> — для отладки. Пользователь его не увидит.</p>
         </div>
       </div>

@@ -73,6 +73,8 @@ body {
 
 .cols { display: grid; grid-template-columns: 1.1fr 1fr; gap: 28px; align-items: start; }
 .cols.even { grid-template-columns: 1fr 1fr; }
+/* Слайды, где слева длинные строки кода: колонка с кодом шире, чтобы не было прокрутки */
+.cols.code-wide { grid-template-columns: 1.55fr 1fr; }
 
 pre.code {
   margin: 0; background: var(--code-bg); color: var(--code-ink);
@@ -128,7 +130,7 @@ table.map td:first-child { white-space: nowrap; }
   .slide { padding: 24px 18px; }
   .slide h1 { font-size: 30px; }
   .slide h2 { font-size: 22px; }
-  .cols, .cols.even { grid-template-columns: 1fr; }
+  .cols, .cols.even, .cols.code-wide { grid-template-columns: 1fr; }
   pre.code { font-size: 13px; }
   table.map { display: block; overflow-x: auto; font-size: 14px; }
   table.map td:first-child { white-space: normal; }
