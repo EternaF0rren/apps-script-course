@@ -45,7 +45,7 @@ function clearArchiveWithConfirm() {
   SpreadsheetApp.getActive().toast('Archive cleared', 'Done', 3);
 }
 
-/* ---------- Задание со *: боковая панель с формой ---------- */
+/* ---------- Дополнительно: боковая панель с формой ---------- */
 
 /** Открыть боковую панель. Её разметка — в файле AddOrder.html этого же проекта. */
 function showAddOrderSidebar() {
