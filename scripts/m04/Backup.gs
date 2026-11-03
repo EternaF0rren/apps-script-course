@@ -11,7 +11,13 @@ function backupSheet_(sheetName) {
   if (!sheet) throw new Error('Sheet "' + sheetName + '" not found');
 
   const stamp = Utilities.formatDate(new Date(), ss.getSpreadsheetTimeZone(), 'dd.MM HH:mm');
-  const copy = sheet.copyTo(ss).setName(sheetName + ' · copy ' + stamp);
+  // Две копии за одну минуту получили бы одинаковое имя, и setName упал бы с ошибкой,
+  // оставив лишний лист «Copy of …». Поэтому, если имя занято, добавляем номер: (2), (3)…
+  let name = sheetName + ' · copy ' + stamp;
+  for (let n = 2; ss.getSheetByName(name); n++) {
+    name = sheetName + ' · copy ' + stamp + ' (' + n + ')';
+  }
+  const copy = sheet.copyTo(ss).setName(name);
   copy.setTabColor('#9e9e9e'); // серая вкладка — сразу видно, что это копия
   return copy;
 }
@@ -24,7 +30,7 @@ function tidyExportSafely() {
 
 /**
  * Задание со *: удалить старые копии, оставив три последние.
- * Удаляет только листы с « · копия » в названии.
+ * Удаляет только листы с « · copy » в названии.
  */
 function cleanupOldBackups() {
   const ss = SpreadsheetApp.getActive();
