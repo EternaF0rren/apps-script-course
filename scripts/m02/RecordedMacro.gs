@@ -3,15 +3,16 @@
  *
  * Так выглядит макрос, который Google Таблицы записали сами:
  * мы выделили шапку, залили её синим, поменяли шрифт на IBM Plex Sans,
- * сделали его курсивом и выровняли текст по центру.
+ * сделали его курсивом, выровняли текст по центру и закрепили первую строку.
  */
-function Formatheader() {
+function FormatHeader() {
   var spreadsheet = SpreadsheetApp.getActive();
   spreadsheet.getRange('A1:L1').activate();
   spreadsheet.getActiveRangeList().setBackground('#1155cc')
   .setFontFamily('IBM Plex Sans')
   .setFontStyle('italic')
   .setHorizontalAlignment('center');
+  spreadsheet.getActiveSheet().setFrozenRows(1);
 };
 
 /**
@@ -33,4 +34,5 @@ function formatHeader() {
     .setFontFamily(HEADER_FONT)
     .setFontStyle('italic')
     .setHorizontalAlignment('center');
+  sheet.setFrozenRows(1); // закрепить шапку
 }

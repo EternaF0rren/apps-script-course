@@ -43,5 +43,5 @@ function countByStatus() {
   const values = SpreadsheetApp.getActive().getSheetByName('Orders').getDataRange().getValues().slice(1);
   const counts = {};
   values.forEach(function (row) { counts[row[4]] = (counts[row[4]] || 0) + 1; });
-  console.log(counts); // { 'Done': 170, 'In Progress': 11, ... }
+  console.log(counts); // { 'Done': 178, 'Problem': 10, 'In Progress': 8, 'In Review': 4 }
 }

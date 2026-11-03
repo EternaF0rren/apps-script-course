@@ -58,7 +58,7 @@ rows.forEach(row => {
   counts[status] = (counts[status] || 0) + 1;
 });
 
-// { 'Done': 170, 'In Progress': 11, ... }</pre>
+// { 'Done': 178, 'Problem': 10, ... }</pre>
         <div>
           <p>Главный шаблон <a href="https://docs.google.com/document/d/1Fk2q8OthXoY0xDYuGhodQrIqktpbT6mKWS6amwSNP70/edit?tab=t.k0fxyfhhtuva" target="_blank" rel="noopener">модуля 6</a>. Читается так: «возьми, сколько уже насчитано по этому статусу (или 0, если полки ещё нет), прибавь 1 и положи обратно».</p>
           <p><code>|| 0</code> нужен потому, что в первый раз полки нет и там <code>undefined</code>.</p>
