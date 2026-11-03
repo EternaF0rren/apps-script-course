@@ -47,24 +47,41 @@ function clearArchiveWithConfirm() {
 
 /* ---------- Дополнительно: боковая панель с формой ---------- */
 
-/** Открыть боковую панель. Её разметка — в файле AddOrder.html этого же проекта. */
+/** Пункт меню «Add order form»: открыть боковую панель. Разметка — в файле AddOrder.html. */
 function showAddOrderSidebar() {
   const html = HtmlService.createHtmlOutputFromFile('AddOrder').setTitle('Add order');
   SpreadsheetApp.getUi().showSidebar(html);
 }
 
 /**
- * Эту функцию вызывает форма из панели. Она получает объект с полями формы
- * и дописывает строку в конец листа «Orders».
+ * Её вызывает форма из панели через google.script.run.
+ * Получает поля формы, дописывает заказ в конец «Orders» и возвращает его номер.
  */
 function addOrderFromForm(form) {
-  const sheet = SpreadsheetApp.getActive().getSheetByName('Orders');
-  const hours = { FP: 24, ESX: 48, FF: 72 }[form.type] || 24;
-  const created = new Date();
-  const deadline = new Date(created.getTime() + hours * 60 * 60 * 1000);
-  const nextId = 'ORD-' + (10000 + sheet.getLastRow()); // простая нумерация для учебного примера
+  const ss = SpreadsheetApp.getActive();
+  const orders = ss.getSheetByName('Orders');
 
-  sheet.appendRow([nextId, created, deadline, form.type, 'New', form.workerId.trim().toUpperCase(),
-    form.workerName.trim(), form.supervisor.trim(), '', '', '', form.comment]);
-  return nextId; // это значение получит форма и покажет пользователю
+  // Имя и супервайзера берём из справочника, а не просим набирать руками
+  const workerId = form.workerId.trim().toUpperCase();
+  const employee = ss.getSheetByName('Employees').getDataRange().getValues()
+    .filter(function (row) { return row[0] === workerId; })[0];
+  if (!employee) throw new Error('No assignee with ID ' + workerId); // этот текст покажет панель
+
+  // Новый номер — на 1 больше самого большого на «Orders» и в «Archive»
+  let maxNumber = 10000;
+  ['Orders', 'Archive'].forEach(function (name) {
+    ss.getSheetByName(name).getRange('A2:A').getValues().forEach(function (row) {
+      const n = Number(String(row[0]).replace(/\D/g, ''));
+      if (n > maxNumber) maxNumber = n;
+    });
+  });
+  const id = 'ORD-' + (maxNumber + 1);
+
+  const DEADLINE_HOURS = { FP: 24, ESX: 48, FF: 72 }; // срок по типу заказа
+  const created = new Date();
+  const deadline = new Date(created.getTime() + DEADLINE_HOURS[form.type] * 60 * 60 * 1000);
+
+  orders.appendRow([id, created, deadline, form.type, 'New', workerId,
+    employee[1], employee[5], '', '', '', form.comment]);
+  return id; // это значение получит панель
 }

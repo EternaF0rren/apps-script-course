@@ -17,21 +17,18 @@
       <select name="type"><option>FP</option><option>ESX</option><option>FF</option></select>
       <label>Assignee ID</label>
       <input name="workerId" placeholder="D-004" required>
-      <label>Assignee</label>
-      <input name="workerName" placeholder="Gleb G." required>
-      <label>Supervisor</label>
-      <input name="supervisor" placeholder="Julia I.">
       <label>Comment</label>
       <textarea name="comment" rows="3"></textarea>
       <button id="b">Add order</button>
     </form>
     <div id="msg"></div>
     <script>
-      // google.script.run вызывает функцию addOrderFromForm из Dialogs.gs
+      // google.script.run вызывает функцию addOrderFromForm из Dialogs.gs.
+      // Имя исполнителя и супервайзера скрипт берёт с листа «Employees» по ID.
       function send(e) {
-        e.preventDefault();
+        e.preventDefault();                           // не перезагружать панель
         const form = document.getElementById('f');
-        document.getElementById('b').disabled = true;
+        document.getElementById('b').disabled = true; // чтобы не добавить заказ дважды
         google.script.run
           .withSuccessHandler(function (id) {
             document.getElementById('msg').textContent = 'Order added: ' + id;
