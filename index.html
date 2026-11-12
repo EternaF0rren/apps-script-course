@@ -28,6 +28,12 @@
   .btn { display: inline-block; background: var(--navy); color: #fff; text-decoration: none; font-weight: 700; padding: 12px 20px; border-radius: 8px; white-space: nowrap; }
   .btn:hover { background: #2b3a5c; }
   .hint { font-size: 13px; color: var(--muted); margin-top: 8px !important; }
+  .community { margin-top: 16px; background: var(--paper); border: 1px solid var(--line); border-radius: 12px; padding: 24px; display: grid; grid-template-columns: 1fr auto; gap: 20px; align-items: center; }
+  .community h3 { margin: 0 0 6px; font-size: 20px; }
+  .community p { margin: 0; color: var(--muted); }
+  .community .links { display: flex; gap: 10px; flex-wrap: wrap; }
+  .btn.ghost { background: #fff; color: var(--navy); border: 2px solid var(--navy); padding: 10px 18px; }
+  .btn.ghost:hover { background: var(--navy); color: #fff; }
 
   .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 16px; }
   .card { background: var(--paper); border: 1px solid var(--line); border-radius: 12px; padding: 18px; display: flex; flex-direction: column; gap: 6px; text-decoration: none; }
@@ -56,6 +62,7 @@
   @media (max-width: 680px) {
     h1 { font-size: 32px; }
     .sandbox { grid-template-columns: 1fr; }
+    .community { grid-template-columns: 1fr; }
     ol.modules li { grid-template-columns: 32px 1fr; }
     ol.modules .s { grid-column: 2; white-space: normal; flex-wrap: wrap; }
     .chip[data-tip]::after { display: none; }
@@ -84,6 +91,17 @@
         <p class="hint">Ссылка работает в рабочем Google-аккаунте. Откроется окно «Создать копию» — копия станет вашей, оригинал останется нетронутым.</p>
       </div>
       <a class="btn" href="https://docs.google.com/spreadsheets/d/1sP5LSFNw-inHezgi46c4yu6_6DCFMGKLMiPOX5Nu_qE/copy" target="_blank" rel="noopener">Создать копию песочницы</a>
+    </div>
+    <!-- Ссылки на каналы: заменить #SLACK_CHANNEL_RU и #SLACK_CHANNEL_EN на адреса каналов -->
+    <div class="community">
+      <div>
+        <h3>Канал курса в Slack</h3>
+        <p>Здесь обсуждают уроки и задания, разбирают ошибки, помогают друг другу и делятся идеями, что ещё автоматизировать. Готовые ответы на тесты не публикуем.</p>
+      </div>
+      <div class="links">
+        <a class="btn" href="#SLACK_CHANNEL_RU" target="_blank" rel="noopener">Канал на русском</a>
+        <a class="btn ghost" href="#SLACK_CHANNEL_EN" target="_blank" rel="noopener">English channel</a>
+      </div>
     </div>
   </section>
 
